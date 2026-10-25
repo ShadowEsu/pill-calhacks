@@ -2,7 +2,7 @@
 
 ## Live now (nothing to redo)
 - Website: https://pillmeifyoucan.health · App: https://app.pillmeifyoucan.health
-- Video on Devpost: the animated explainer https://youtu.be/gdZAg-kwQG0 (the only video left on the channel). Your no-music demo cut is on the Mac: ~/Downloads/pill-pitch-FINAL-nomusic.mp4.
+- Video on Devpost: your demo cut https://www.youtube.com/watch?v=yXEmc25dfMw (public); explainer https://youtu.be/gdZAg-kwQG0 as a link.
 - Code: https://github.com/ShadowEsu/pill-calhacks (public)
 - Devpost "Pill": SUBMITTED with story, 15 pictures, 13 prizes, deck PDF, links. Editable until 09:00.
 

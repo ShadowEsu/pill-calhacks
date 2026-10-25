@@ -142,8 +142,9 @@ arduino-uno-q, arduino, c++, python, fastapi, sqlite, javascript, typescript, re
 - Website: https://pillmeifyoucan.health (alias: https://pill-site.vercel.app)
 - Clinic / personal app: https://app.pillmeifyoucan.health (alias: https://pill-app-delta.vercel.app)
 - Repo (station app in `pillgate/`, clinic app in `pill/web`, pay service in `pill/pay`): https://github.com/ShadowEsu/pill-calhacks (public since Sun 07:3x)
-- Video on Devpost (the only video left on the "Pill" YouTube channel; the owner deleted every talking-head cut at 08:33): animated explainer, 2:38, Public, subtitles only, no narration; shows the first design with a quarter tablet: https://youtu.be/gdZAg-kwQG0
-- Owner's demo cut with no music (2:28, highlighter captions, stickers, sound effects): NOT on YouTube; file only, `~/Downloads/pill-pitch-FINAL-nomusic.mp4` (= `pitch/video/pill-pitch-v12-nomusic.mp4`, untracked).
+- Video on Devpost (final, Sun 08:47): the owner's demo cut, 2:28, Public, cleaned voice (−16 LUFS), quiet lofi bed ("Chillhop — Remain" by Ornave, Pixabay licence) ducked under the voice, CC0 sound effects, highlighter captions, stickers: https://www.youtube.com/watch?v=yXEmc25dfMw
+- Animated explainer (2:38, Public, subtitles only, no narration; shows the first design with a quarter tablet), a Try-it-out link: https://youtu.be/gdZAg-kwQG0
+- Other files on the Mac only: `~/Downloads/pill-pitch-FINAL-nomusic.mp4` (same cut, no music). All earlier talking-head uploads were deleted from the channel at 08:33.
 - Figma deck: `[FILL 4: Figma link]`
 
 ## Gallery images

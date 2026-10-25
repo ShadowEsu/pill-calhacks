@@ -105,7 +105,7 @@ More answers: `pitch/QA.md` (29 questions).
 Point at the link card:
 - Site: https://pillmeifyoucan.health · app: https://app.pillmeifyoucan.health
 - Repo: https://github.com/ShadowEsu/pill-calhacks
-- Video: https://youtu.be/gdZAg-kwQG0 (animated explainer)
+- Video: https://www.youtube.com/watch?v=yXEmc25dfMw · explainer: https://youtu.be/gdZAg-kwQG0
 - Devpost: our Pill page on cal-hacks-13-0.devpost.com
 
 Last line: **"Try to make it pass something it shouldn't."**
