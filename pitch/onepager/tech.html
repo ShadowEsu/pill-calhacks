@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Pill · technical overview</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: #111; font-family: Inter, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  .page { width: 1920px; height: 1080px; padding: 40px 64px 36px; page-break-after: always; break-after: page; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .top { display: flex; align-items: baseline; justify-content: space-between; gap: 36px; border-bottom: 3px solid #111; padding-bottom: 12px; margin-bottom: 20px; }
+  .brand { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+  .pill { width: 52px; height: 24px; border-radius: 12px; background: linear-gradient(90deg, #22c55e 0 50%, #e5e7eb 50% 100%); border: 2px solid #111; }
+  .brand b { font-size: 48px; letter-spacing: -0.03em; }
+  .top .t { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; flex: 1; }
+  .top .n { font-size: 20px; color: #555; flex-shrink: 0; }
+  .body { flex: 1; min-height: 0; display: grid; gap: 26px; }
+  .c2 { grid-template-columns: 1fr 1fr; } .c3 { grid-template-columns: 1fr 1fr 1fr; } .c21 { grid-template-columns: 1.5fr 1fr; } .c12 { grid-template-columns: 1fr 1.5fr; }
+  h2 { font-size: 26px; margin: 0 0 10px; letter-spacing: -0.01em; }
+  h3 { font-size: 21px; margin: 14px 0 6px; }
+  p, li { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  ul { margin: 0; padding-left: 22px; }
+  code, .mono { font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 16px; }
+  pre { font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 15.5px; line-height: 1.38; background: #0f172a; color: #e2e8f0; border-radius: 14px; padding: 16px 18px; margin: 0; white-space: pre; overflow: hidden; }
+  table { border-collapse: collapse; width: 100%; font-size: 17px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #d4d4d8; vertical-align: top; }
+  th { font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: #555; }
+  td b { font-weight: 600; }
+  .box { border: 1.5px solid #d4d4d8; border-radius: 16px; padding: 18px 20px; min-height: 0; overflow: hidden; }
+  .foot { display: flex; justify-content: space-between; font-size: 18px; color: #555; margin-top: 14px; border-top: 1.5px solid #d4d4d8; padding-top: 8px; }
+  .im { border: 1.5px solid #d4d4d8; border-radius: 16px; overflow: hidden; background: #fafafa; display: flex; align-items: center; justify-content: center; min-height: 0; }
+  .im img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .svgbox svg { width: 100%; height: 100%; }
+  .tag { display: inline-block; font-size: 14px; font-weight: 600; padding: 2px 10px; border-radius: 999px; border: 1.5px solid #111; margin-right: 6px; }
+  .p { background: #dcfce7; } .l { background: #fef3c7; } .u { background: #e5e7eb; } .cb { background: #dbeafe; }
+  .kpi { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 18px; }
+  .kpi div { border: 2px solid #111; border-radius: 14px; padding: 10px 14px; }
+  .kpi b { display: block; font-size: 30px; letter-spacing: -0.02em; } .kpi span { font-size: 15px; color: #444; }
+  .cover h1 { font-size: 88px; margin: 0; line-height: 1; letter-spacing: -0.04em; }
+  .cover .sub { font-size: 26px; color: #333; margin: 10px 0 18px; max-width: 1750px; line-height: 1.35; }
+  .cover svg text { font-size: 12.5px; }
+  .cover svg text[font-size="20"] { font-size: 17px; } .cover svg text[font-size="18"] { font-size: 15.5px; }
+  .cover svg text[font-size="14"] { font-size: 13px; } .cover svg text[font-size="13"] { font-size: 10.5px; } .cover svg text[font-size="12"] { font-size: 11px; }
+</style></head><body>
+
+<!-- 1 · SYSTEM MAP -->
+<section class="page cover">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Technical overview: what we built, in which languages, and how the pieces talk</div><div class="n">1 / 7 · Cal Hacks 13.0</div></div>
+  <h1>Pill, under the hood</h1>
+  <p class="sub">Five codebases in one repo (<code>github.com/ShadowEsu/pill-calhacks</code>): C++ firmware on an Arduino UNO Q, a Python/FastAPI station server with a vanilla-JS UI, a React 19 + TypeScript clinic app, a Node 22 + Express pay service on Coinbase x402 / CDP, and a Vite + anime.js marketing site. A design pipeline turns one JSON file into the HTML deck, the PDF, the PPTX and a Figma plugin. No model ever sets a verdict: the verdict is deterministic code, the models explain it.</p>
+  <div class="kpi">
+    <div><b>574</b><span>lines of C++ firmware (1 CSV line / s)</span></div>
+    <div><b>3,976</b><span>lines of Python (FastAPI, analysis, Claude evidence)</span></div>
+    <div><b>15,051</b><span>lines of TypeScript / TSX (clinic app + pay service)</span></div>
+    <div><b>8,911</b><span>lines of JavaScript (station UI, site, deck builders)</span></div>
+    <div><b>8,288</b><span>lines of HTML + CSS (site, station UI, deck)</span></div>
+    <div><b>252</b><span>lines of OpenSCAD (chamber, lid, diffuser)</span></div>
+  </div>
+  <div class="body svgbox" style="grid-template-columns: 1fr">
+    <svg viewBox="0 0 1792 560" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Arial, sans-serif">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker></defs>
+      <g font-size="15" fill="#111">
+        <!-- lanes -->
+        <text x="20" y="28" font-size="14" font-weight="700" fill="#555" letter-spacing="2">HARDWARE</text>
+        <text x="470" y="28" font-size="14" font-weight="700" fill="#555" letter-spacing="2">STATION (LAPTOP, PYTHON)</text>
+        <text x="990" y="28" font-size="14" font-weight="700" fill="#555" letter-spacing="2">CLINIC (VERCEL, TYPESCRIPT)</text>
+        <text x="1440" y="28" font-size="14" font-weight="700" fill="#555" letter-spacing="2">MONEY (NODE, COINBASE)</text>
+        <!-- hardware -->
+        <rect x="20" y="50" width="400" height="150" rx="16" fill="#eef2ff" stroke="#111" stroke-width="2"/>
+        <text x="40" y="80" font-size="20" font-weight="700">Arduino UNO Q · peel_firmware.ino (C++)</text>
+        <text x="40" y="108">3 LEDs (B/W/R, pins 5–8, 330 Ω) · 2 CdS photoresistors (A0 inline, A1 90°)</text>
+        <text x="40" y="132">Each second: LEDs off → dark read; per LED: on, 180 ms settle, read</text>
+        <text x="40" y="156" font-family="JetBrains Mono, Menlo, monospace" font-size="14">ms,dark_a,dark_b,B_a,B_b,W_a,W_b,R_a,R_b,temp_c,stir</text>
+        <text x="40" y="182">USB serial 115200 · commands R&lt;ms&gt;, L&lt;mask&gt; · decides nothing</text>
+        <rect x="20" y="230" width="400" height="90" rx="16" fill="#fff" stroke="#111" stroke-width="2"/>
+        <text x="40" y="260" font-size="18" font-weight="700">Printed chamber (OpenSCAD → STL)</text>
+        <text x="40" y="286">body, lid, diffuser · cup to the fill line · lid = dark</text>
+        <text x="40" y="308">blueprints: wiring, breadboard, cross-sections</text>
+        <!-- station -->
+        <rect x="470" y="50" width="470" height="270" rx="16" fill="#ecfdf5" stroke="#111" stroke-width="2"/>
+        <text x="490" y="80" font-size="20" font-weight="700">pillgate/app · FastAPI + uvicorn (Python 3.11)</text>
+        <text x="490" y="108"><tspan font-weight="600">device.py</tspan> serial / replay reader thread, auto-port, self-reopen</text>
+        <text x="490" y="132"><tspan font-weight="600">guide.py</tspan> water check (dark, range, light, steady, reference)</text>
+        <text x="490" y="156"><tspan font-weight="600">analysis.py</tspan> T = net/blank · A = −log10 T · A(blue) − A(red)</text>
+        <text x="490" y="180">rolling median · checkpoints every 5 s · plateau · t80 · % of dose</text>
+        <text x="490" y="204"><tspan font-weight="600">evidence.py</tspan> Claude (claude-sonnet-5) reads label + imprint → report</text>
+        <text x="490" y="228"><tspan font-weight="600">store.py</tspan> SQLite: runs, scans, profiles, issues · <tspan font-weight="600">simulate.py</tspan></text>
+        <text x="490" y="252"><tspan font-weight="600">static/app.js</tspan> vanilla JS SPA (hash routes, Show mode, Ask Pill)</text>
+        <text x="490" y="280" font-family="JetBrains Mono, Menlo, monospace" font-size="13">/api/live /api/run/{start,mark,stop,upload} /api/runs /api/scans</text>
+        <text x="490" y="302" font-family="JetBrains Mono, Menlo, monospace" font-size="13">/api/profiles/{reference,calibration} /api/atlas /api/issues :8000 live · :8001 replay</text>
+        <!-- clinic -->
+        <rect x="990" y="50" width="400" height="270" rx="16" fill="#fff7ed" stroke="#111" stroke-width="2"/>
+        <text x="1010" y="80" font-size="20" font-weight="700">pill/web · React 19 + TypeScript + Vite</text>
+        <text x="1010" y="108">25 screens: Dashboard, Deliveries, Delivery, Pay, Verify,</text>
+        <text x="1010" y="132">Kiosk, Run, Runs, Evaluation, Check, Bottle, Ask, Log …</text>
+        <text x="1010" y="160"><tspan font-weight="600">lib/rules.ts</tspan> seven rules → 3 verdicts (P1, N1–3, U1–3)</text>
+        <text x="1010" y="184"><tspan font-weight="600">lib/agent.ts</tspan> policy agent: release / hold / escalate</text>
+        <text x="1010" y="208"><tspan font-weight="600">lib/follower.ts</tspan> Gemini label read (null, never invented)</text>
+        <text x="1010" y="232"><tspan font-weight="600">lib/station.ts · stream.ts</tspan> live / replay / simulated badge</text>
+        <text x="1010" y="256">camera, doses, reminders, read-aloud (personal mode)</text>
+        <text x="1010" y="284" font-family="JetBrains Mono, Menlo, monospace" font-size="13">app.pillmeifyoucan.health · nosniff · referrer-policy</text>
+        <!-- money -->
+        <rect x="1440" y="50" width="340" height="270" rx="16" fill="#eff6ff" stroke="#111" stroke-width="2"/>
+        <text x="1460" y="80" font-size="20" font-weight="700">pill/pay · Node 22 + Express (TS)</text>
+        <text x="1460" y="108"><tspan font-weight="600">server.ts</tspan> POST /verify behind @x402/express</text>
+        <text x="1460" y="132">402 → PAYMENT-REQUIRED: 0.05 USDC, base-sepolia</text>
+        <text x="1460" y="156"><tspan font-weight="600">escrow.ts</tspan> 3 CDP server wallets:</text>
+        <text x="1460" y="180" font-family="JetBrains Mono, Menlo, monospace" font-size="13">pill-clinic → pill-escrow → pill-supplier</text>
+        <text x="1460" y="204"><tspan font-weight="600">buy-verdict.ts</tspan> buyer agent, 1 USDC / 24 h cap</text>
+        <text x="1460" y="228"><tspan font-weight="600">rules.ts · checker.ts</tspan> P1–P6, injection filter</text>
+        <text x="1460" y="252"><tspan font-weight="600">nessie.ts</tspan> Capital One mirror · <tspan font-weight="600">faucet.ts</tspan></text>
+        <text x="1460" y="280" font-family="JetBrains Mono, Menlo, monospace" font-size="13">modes: cdp · public-facilitator · simulated</text>
+        <text x="1460" y="302" font-family="JetBrains Mono, Menlo, monospace" font-size="13">:8402 · TESTNET only · security.test.mts</text>
+        <!-- arrows -->
+        <path d="M420 125 H468" stroke="#111" stroke-width="2.5" marker-end="url(#ar)"/><text x="424" y="116" font-size="12">USB serial</text>
+        <path d="M940 160 H988" stroke="#111" stroke-width="2.5" marker-end="url(#ar)"/><text x="944" y="150" font-size="12">verdict JSON</text>
+        <path d="M1390 160 H1438" stroke="#111" stroke-width="2.5" marker-end="url(#ar)"/><text x="1394" y="150" font-size="12">release / hold</text>
+        <path d="M1240 320 V372" stroke="#111" stroke-width="2.5" marker-end="url(#ar)"/>
+        <path d="M705 320 V372" stroke="#111" stroke-width="2.5" marker-end="url(#ar)"/>
+        <!-- external -->
+        <rect x="470" y="380" width="920" height="80" rx="16" fill="#fff" stroke="#111" stroke-width="2" stroke-dasharray="6 5"/>
+        <text x="490" y="408" font-size="18" font-weight="700">External services (all read-only or TESTNET)</text>
+        <text x="490" y="432">Anthropic Claude (claude-sonnet-5) · Google Gemini · openFDA (recalls, labels) · RxNav (drug names)</text><text x="490" y="452">Coinbase CDP + x402 facilitator · Base Sepolia · Capital One Nessie sandbox</text>
+        <!-- site + design -->
+        <rect x="20" y="380" width="400" height="160" rx="16" fill="#fdf2f8" stroke="#111" stroke-width="2"/>
+        <text x="40" y="410" font-size="20" font-weight="700">pill-site · Vite + anime.js</text>
+        <text x="40" y="438">scroll-synced story, money tree (flow.js, one data table,</text>
+        <text x="40" y="462">two layouts), x402 replay, pricing calc, #film, #coinbase</text>
+        <text x="40" y="486">Vercel · pillmeifyoucan.health · Porkbun DNS</text>
+        <text x="40" y="512" font-family="JetBrains Mono, Menlo, monospace" font-size="13">A @ 76.76.21.21 · CNAME www,app → cname.vercel-dns.com</text>
+        <rect x="1440" y="380" width="340" height="160" rx="16" fill="#f5f3ff" stroke="#111" stroke-width="2"/>
+        <text x="1460" y="410" font-size="20" font-weight="700">figma/ · design from code</text>
+        <text x="1460" y="438">deck.json → build-deck.mjs (HTML/PDF)</text>
+        <text x="1460" y="462">→ build-pptx.mjs (pptxgenjs) → Figma Slides</text>
+        <text x="1460" y="486">→ plugin/ (Figma plugin, stub-tested)</text>
+        <text x="1460" y="512">stage log timed from git · metrics.json</text>
+        <path d="M940 420 H1438" stroke="#111" stroke-width="0"/>
+      </g>
+    </svg>
+  </div>
+  <div class="foot"><span>Line counts from <code>git ls-files</code> at c53a8cf (excluding node_modules, generated galleries, deck previews).</span><span>pillmeifyoucan.health · app.pillmeifyoucan.health</span></div>
+</section>
+
+<!-- 2 · REPO STRUCTURE + LANGUAGES -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Repository structure and the language per layer</div><div class="n">2 / 7</div></div>
+  <div class="body c21">
+    <pre>pill-calhacks/
+├── pillgate/                      station (the box + its server)
+│   ├── firmware/peel_firmware/    peel_firmware.ino   C++ · UNO Q · 1 CSV line/s · LED sequencing · dark read
+│   ├── app/                       Python 3.11 · FastAPI
+│   │   ├── server.py              routes (/api/live, /api/run/*, /api/scans, /api/profiles, /api/atlas)
+│   │   ├── device.py              serial/replay reader thread · auto-port · reopen after 8 s silence
+│   │   ├── analysis.py            parse_csv · absorbance · rolling median · checkpoints · plateau · t80
+│   │   ├── guide.py               clean-water checks · dissolve progress
+│   │   ├── evidence.py            Claude report (label, imprint, sources) · tool_choice forced JSON
+│   │   ├── store.py · simulate.py SQLite store · synthetic curves for the replay/demo
+│   │   └── static/app.js          vanilla-JS SPA · Show mode · Ask Pill · personal mode
+│   ├── cad/ (OpenSCAD → STL)      chamber body, lid, diffuser
+│   ├── diagrams/                  wiring, breadboard, chamber cross-sections
+│   ├── runs/                      REAL_aspirin_first_test.csv (the replay) + simulated runs
+│   └── start.sh                   live | demo | both | reset | online (ngrok + PIN)
+├── pill/web/                      clinic + personal app · React 19 · TypeScript · Vite · Vercel
+│   └── src/screens (25) · src/lib (rules.ts, agent.ts, follower.ts, station.ts, stream.ts …)
+├── pill/pay/                      pay service · Node 22 · Express · TypeScript
+│   └── src/ server.ts escrow.ts buy-verdict.ts rules.ts checker.ts gate.ts nessie.ts faucet.ts tiger.ts
+│       test/security.test.mts (12 checks) · src/test-policy.ts (6 cases) · policy.md (P1–P6)
+├── pill-site/                     marketing site · Vite · anime.js · src/{main,flow,story,pay}.js
+├── figma/                         deck.json → build-deck.mjs · build-pptx.mjs · plugin/ · STAGE-LOG.md
+├── pitch/                         Devpost kit, table script, gallery, video edit pipeline (ffmpeg)
+└── tools/                         discord bridge (Python), helpers</pre>
+    <div class="box">
+      <h2>Languages, and why each one</h2>
+      <table>
+        <tr><th>Layer</th><th>Language / runtime</th><th>Why</th></tr>
+        <tr><td><b>Firmware</b></td><td>C++ (Arduino core for UNO Q, STM32 MCU)</td><td>Timing-exact LED sequencing and ADC reads; prints, never decides.</td></tr>
+        <tr><td><b>Station server</b></td><td>Python 3.11 · FastAPI · uvicorn · pyserial · SQLite</td><td>Fast to iterate on the maths; one thread reads the port, one process serves the UI.</td></tr>
+        <tr><td><b>Station UI</b></td><td>Vanilla JS (no build step)</td><td>Runs from the same server on the laptop and any phone on the venue Wi-Fi.</td></tr>
+        <tr><td><b>Clinic app</b></td><td>TypeScript · React 19 · Vite · Vercel</td><td>25 screens, typed rules shared with the pay service; static hosting.</td></tr>
+        <tr><td><b>Pay service</b></td><td>TypeScript · Node 22 · Express · @x402/express · @x402/evm · CDP SDK</td><td>x402 reference middleware is Express-first; CDP server wallets sign.</td></tr>
+        <tr><td><b>Site</b></td><td>JavaScript · Vite · anime.js</td><td>Scroll story and diagrams drawn from one data table (flow.js).</td></tr>
+        <tr><td><b>Design</b></td><td>JavaScript (mjs) · pptxgenjs · Figma Plugin API</td><td>One JSON source → HTML, PDF, PPTX, Figma.</td></tr>
+        <tr><td><b>Hardware CAD</b></td><td>OpenSCAD</td><td>Parametric chamber; printed body, lid, diffuser.</td></tr>
+        <tr><td><b>Video</b></td><td>bash + ffmpeg filter graphs</td><td>Karaoke captions, sidechain-ducked music, SFX buses; reproducible renders.</td></tr>
+      </table>
+      <h3>Numbers</h3>
+      <p>≈ 37,000 lines of source in the repo (C++ 574 · Python 3,976 · TS/TSX 15,051 · JS/MJS 8,911 · HTML 3,939 · CSS 4,349 · shell 579 · OpenSCAD 252). 205 commits over Fri 19:40 → Sun 09:00, timed in <code>figma/git-timeline.txt</code>.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Everything public: github.com/ShadowEsu/pill-calhacks (history scrubbed of personal photos before publishing).</span><span>2 / 7</span></div>
+</section>
+
+<!-- 3 · MEASUREMENT PIPELINE -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Measurement: from photons to one of three answers</div><div class="n">3 / 7</div></div>
+  <div class="body c12">
+    <div class="box">
+      <h2>Firmware loop (1 Hz)</h2>
+      <ul>
+        <li>All LEDs off → read A0 (inline) and A1 (90°): <b>dark</b> = room light leaking in.</li>
+        <li>For each LED in mask <code>0x0B</code> (blue, white, red): on → 180 ms settle (CdS is slow) → throw-away read → read both sensors → off.</li>
+        <li>Print one CSV line: <code>ms,dark_a,dark_b,B_a,B_b,W_a,W_b,R_a,R_b,temp_c,stir</code>.</li>
+        <li>Serial commands: <code>R&lt;ms&gt;</code> sample period 300–60000, <code>L&lt;mask&gt;</code> LED set. Boot test flashes B/W/G/R.</li>
+        <li>UNO Q is 3.3 V, 12-bit ADC; LEDs are wired active-low through 330 Ω from the 5 V pin.</li>
+      </ul>
+      <h2 style="margin-top:16px">Station maths (analysis.py)</h2>
+      <ul>
+        <li><b>net</b> = reading − dark, per LED and per sensor.</li>
+        <li><b>Transmission</b> T(t) = net(t) / net(blank); <b>absorbance</b> A(t) = −log10 T(t).</li>
+        <li><b>Colour-specific</b> = A(blue) − A(red): cloudiness dims every colour about equally, a dye does not.</li>
+        <li>Rolling median (window), checkpoints every 5 s, <b>plateau</b> when the curve stops changing, <b>t80</b> = time to 80 % of plateau.</li>
+        <li>With a calibration profile (known standards): plateau absorbance → concentration → % of the label dose.</li>
+        <li>Quality gates: blank std &gt; 0.02 A = unstable light; T &lt; 2 % = too dark; lid open &gt; 25 s during the run = Unable to verify.</li>
+      </ul>
+      <h2 style="margin-top:16px">Clean-water check (guide.py)</h2>
+      <p>10 s of steady readings with the lid closed, five named checks: <b>dark</b> (room light ≤ a few % of blue), <b>range</b> (not saturated), <b>light</b> (blue reaches the sensor), <b>steady</b>, <b>reference</b> (same as the last clean water). The run cannot start until all five pass.</p>
+    </div>
+    <div style="display:grid; grid-template-rows: 1fr auto; gap: 20px; min-height:0">
+      <div class="im"><img src="../gallery-all/site-12-pill-gate-data-path.png"></div>
+      <div class="box">
+        <h2>The seven rules (rules.ts, deterministic, in order)</h2>
+        <table>
+          <tr><th>Rule</th><th>Verdict</th><th>Fires when</th></tr>
+          <tr><td><b>U1</b></td><td><span class="tag u">Unable to verify</span></td><td>no reference band for this drug on this station</td></tr>
+          <tr><td><b>U2</b></td><td><span class="tag u">Unable to verify</span></td><td>the station reported a fault during the run</td></tr>
+          <tr><td><b>U3</b></td><td><span class="tag u">Unable to verify</span></td><td>&lt; 30 s of samples, or scatter above the reference max</td></tr>
+          <tr><td><b>N1</b></td><td><span class="tag l">Needs lab testing</span></td><td>plateau below the reference band</td></tr>
+          <tr><td><b>N2</b></td><td><span class="tag l">Needs lab testing</span></td><td>inline channel moved but the 90° glow did not rise</td></tr>
+          <tr><td><b>N3</b></td><td><span class="tag l">Needs lab testing</span></td><td>plateau above the reference band</td></tr>
+          <tr><td><b>P1</b></td><td><span class="tag p">Passed the screen</span></td><td>plateau inside the band and the 90° glow rose</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Three answers, never four. The same rules run in the station (Python) and the clinic app (TypeScript); the rule id travels with every verdict.</span><span>3 / 7</span></div>
+</section>
+
+<!-- 4 · SEQUENCE: ONE RUN -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Sequence: one run, from Start to the money decision</div><div class="n">4 / 7</div></div>
+  <div class="body svgbox" style="grid-template-columns: 1fr">
+    <svg viewBox="0 0 1792 740" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Arial, sans-serif" font-size="15">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker></defs>
+      <g font-weight="700" font-size="17" text-anchor="middle">
+        <rect x="40" y="20" width="200" height="44" rx="10" fill="#eef2ff" stroke="#111" stroke-width="2"/><text x="140" y="48">UNO Q firmware</text>
+        <rect x="340" y="20" width="200" height="44" rx="10" fill="#ecfdf5" stroke="#111" stroke-width="2"/><text x="440" y="48">Station server</text>
+        <rect x="640" y="20" width="200" height="44" rx="10" fill="#fff" stroke="#111" stroke-width="2"/><text x="740" y="48">Pharmacist (UI)</text>
+        <rect x="940" y="20" width="200" height="44" rx="10" fill="#fff" stroke="#111" stroke-width="2" stroke-dasharray="6 5"/><text x="1040" y="48">Claude / Gemini</text>
+        <rect x="1240" y="20" width="200" height="44" rx="10" fill="#fff7ed" stroke="#111" stroke-width="2"/><text x="1340" y="48">Clinic app + policy</text>
+        <rect x="1540" y="20" width="220" height="44" rx="10" fill="#eff6ff" stroke="#111" stroke-width="2"/><text x="1650" y="48">CDP wallets / x402</text>
+      </g>
+      <g stroke="#bbb" stroke-width="2" stroke-dasharray="4 6">
+        <path d="M140 64 V720"/><path d="M440 64 V720"/><path d="M740 64 V720"/><path d="M1040 64 V720"/><path d="M1340 64 V720"/><path d="M1650 64 V720"/>
+      </g>
+      <g stroke="#111" stroke-width="2" fill="#111">
+        <path d="M740 110 H446" marker-end="url(#ar2)" fill="none"/><text x="460" y="102" stroke="none">POST /api/run/start (quick 60 s)</text>
+        <path d="M140 150 H434" marker-end="url(#ar2)" fill="none"/><text x="150" y="142" stroke="none">CSV line every second (dark + B/W/R on both sensors)</text>
+        <path d="M440 190 H734" marker-end="url(#ar2)" fill="none"/><text x="455" y="182" stroke="none">/api/live → guide: water checks (dark, range, light, steady, reference) · 10 s steady</text>
+        <path d="M740 230 H446" marker-end="url(#ar2)" fill="none"/><text x="460" y="222" stroke="none">lid open → tablet in → 5 stirs → lid closed → Continue (mark tablet_in)</text>
+        <path d="M140 270 H434" marker-end="url(#ar2)" fill="none"/><text x="150" y="262" stroke="none">60 s of samples (full mode: 2–10 min, stops on plateau)</text>
+        <path d="M440 310 H734" marker-end="url(#ar2)" fill="none"/><text x="455" y="302" stroke="none">analysis: A(t) = −log10(net/blank) → plateau, t80, scatter → rules U1…P1 → verdict + rule id</text>
+        <path d="M740 350 H1034" marker-end="url(#ar2)" fill="none"/><text x="760" y="342" stroke="none">bottle photo + imprint (optional)</text>
+        <path d="M1040 390 H446" marker-end="url(#ar2)" fill="none"/><text x="460" y="382" stroke="none">Claude: report + numbered sources (openFDA, RxNav, label) · forced-JSON tool · cannot change the verdict</text>
+        <path d="M440 430 H734" marker-end="url(#ar2)" fill="none"/><text x="455" y="422" stroke="none">result screen: verdict, band, curve, "what the app is doing", Ask Pill (answers only from this report)</text>
+        <path d="M440 470 H1334" marker-end="url(#ar2)" fill="none"/><text x="455" y="462" stroke="none">verdict JSON {verdict, rule, plateau, band, run_id, why} → delivery record (badge: LIVE / REPLAY / SIMULATED)</text>
+        <path d="M1340 510 H1046" marker-end="url(#ar2)" fill="none"/><text x="1060" y="502" stroke="none">Gemini reads the label → editable fields (null if unreadable)</text>
+        <path d="M1340 550 H1346" fill="none"/><text x="1352" y="542" stroke="none">policy P1–P6 in code: PASS + no recall + within cap → propose release; else hold / escalate (model may only downgrade)</text>
+        <path d="M1340 590 H746" marker-end="url(#ar2)" fill="none"/><text x="760" y="582" stroke="none">"Hold to release $420.00" · the pharmacist's tap is the only release</text>
+        <path d="M1340 630 H1644" marker-end="url(#ar2)" fill="none"/><text x="1360" y="622" stroke="none">escrow → supplier, USDC, Base Sepolia (TESTNET; simulated until a CDP key)</text>
+        <path d="M1650 680 H1346" marker-end="url(#ar2)" fill="none"/><text x="1360" y="672" stroke="none">tx hash / SIMULATED log line · Nessie sandbox mirror (optional)</text>
+      </g>
+    </svg>
+  </div>
+  <div class="foot"><span>Timing: blank 10 s · quick run 60 s · full run 120–600 s · lid-open limit 25 s. Every decision logs lot, time, rule id and the policy clause it quotes.</span><span>4 / 7</span></div>
+</section>
+
+<!-- 5 · MONEY + x402 -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Money: three CDP server wallets, six policy clauses, one x402 route</div><div class="n">5 / 7</div></div>
+  <div class="body c21">
+    <div class="im"><img src="../gallery/05-money-flow.png"></div>
+    <div style="display:grid; grid-template-rows: auto 1fr; gap: 20px; min-height:0">
+      <div class="box">
+        <h2>policy.md: the six clauses the agent may quote</h2>
+        <table>
+          <tr><td><b>P1</b></td><td>Release needs PASS, no recall record for the lot, amount within the spend cap, and the pharmacist's tap.</td></tr>
+          <tr><td><b>P2</b></td><td>NEEDS LAB: hold, and draft the lab referral with the curve attached.</td></tr>
+          <tr><td><b>P3</b></td><td>UNABLE TO VERIFY: escalate to a person; no money moves.</td></tr>
+          <tr><td><b>P4</b></td><td>A recall hit on the lot: hold, whatever the curve says.</td></tr>
+          <tr><td><b>P5</b></td><td>Amount above the cap: escalate.</td></tr>
+          <tr><td><b>P6</b></td><td>Recall lookup unreachable: hold until a lookup succeeds or a person overrides.</td></tr>
+        </table>
+      </div>
+      <pre>$ curl -i -X POST localhost:8402/verify -d '{"curve":"B2-07"}'
+HTTP/1.1 402 Payment Required
+PAYMENT-REQUIRED: {"scheme":"exact","network":"base-sepolia",
+  "asset":"USDC","amount":"0.05","payTo":"0x9c1f…a4d2"}
+
+# buyer agent (buy-verdict.ts): reads the price, checks the
+# 1 USDC / 24 h cap, signs with its CDP wallet, retries:
+$ curl -X POST localhost:8402/verify -H "X-PAYMENT: &lt;signed&gt;" …
+← facilitator /verify: signature OK (answered for real;
+   insufficient_balance on our unfunded test wallet)
+← 200 {"verdict":"PASS","rule":"P1","plateau":0.41,
+       "band":[0.36,0.47],"run_id":"…"}   ← pending a CDP key
+
+stack: @x402/express · @x402/evm · @coinbase/cdp-sdk (not the MCP)
+modes: cdp · public-facilitator · simulated   · everything TESTNET</pre>
+    </div>
+  </div>
+  <div class="foot"><span>Wallets: pill-clinic pays in · pill-escrow holds · pill-supplier is paid · refund path back to pill-clinic. The agent can propose, draft a referral, buy a verdict under $1; it cannot release.</span><span>5 / 7</span></div>
+</section>
+
+<!-- 6 · AI + SECURITY -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Where the models sit, and the fences around them</div><div class="n">6 / 7</div></div>
+  <div class="body c2">
+    <div class="box">
+      <h2>Models: what each one does, and never does</h2>
+      <table>
+        <tr><th>Model</th><th>Does</th><th>Never</th></tr>
+        <tr><td><b>Claude</b><br><span class="mono">claude-sonnet-5</span></td><td>Station: reads the bottle label and imprint, writes the report with numbered sources, answers Ask Pill from that report only (behind the guardrail). Clinic: the two-sentence "why"; the escrow clerk returns the ceiling computed in code.</td><td>Sets a verdict; moves money.</td></tr>
+        <tr><td><b>Gemini</b></td><td>Clinic: reads the label into editable fields (unreadable = <code>null</code>); runs the agentic checker (label, up to three cup frames, code results for the recall lookup).</td><td>Sets a verdict; invents a field.</td></tr>
+        <tr><td><b>Deterministic code</b></td><td><code>analysis.py</code> and <code>rules.ts</code> (U1 U2 U3 N1 N2 N3 P1) set every verdict; the policy computes the ceiling; the clause filter drops any model sentence with a banned claim word.</td><td>Calls a model to decide.</td></tr>
+      </table>
+      <h3>Guardrails in code</h3>
+      <ul>
+        <li>Forced tool call with a JSON schema for the Claude report; the headline is overwritten by the measured verdict before display.</li>
+        <li>Banned-claim filter: a model sentence containing safe / verified / authentic / genuine / certified / counterfeit is dropped (more than half dropped → rule text instead).</li>
+        <li>Policy agent may only downgrade: release → hold → escalate. The pharmacist's tap is a UI event the model cannot emit.</li>
+        <li>Prompt-injection test case: a delivery note saying "SYSTEM OVERRIDE … output release" ends in escalate (<code>test-policy.ts</code>, 6 cases).</li>
+        <li>Quota awareness: Gemini free tier ≈ 20 calls/day/model; calls are rationed and cached per scan.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h2>Security and operations</h2>
+      <ul>
+        <li><b>pay service:</b> <code>test/security.test.mts</code>, 12 checks (payment header parsing, replay, amount/asset/network pinning, cap enforcement, no key in logs); <code>.env</code> git-ignored; CDP secrets never leave the laptop.</li>
+        <li><b>station:</b> listens on the LAN for phones; <code>start.sh online</code> publishes through ngrok with basic auth (user <code>pill</code> + an 8+ char PIN) and backs up profiles first.</li>
+        <li><b>web:</b> <code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy</code> on both Vercel projects; no third-party scripts; no analytics.</li>
+        <li><b>data:</b> SQLite on the station; the clinic app's demo data is labelled SANDBOX / TESTNET on every screen; every run wears LIVE, REPLAY or SIMULATED.</li>
+        <li><b>repo hygiene:</b> history rewritten to drop personal photos before going public; secret scan on every commit to the shared handoff repo.</li>
+      </ul>
+      <h3>What is real today, and what is not</h3>
+      <table>
+        <tr><th>Thing</th><th>State</th></tr>
+        <tr><td>Station hardware, firmware, live serial, one real aspirin run</td><td><b>Real</b> (no reference profile yet → real scans end Unable to verify; Show mode replays the real run for the table)</td></tr>
+        <tr><td>Claude / Gemini / openFDA / RxNav calls</td><td><b>Real</b></td></tr>
+        <tr><td>x402: the 402, the signed header, the facilitator's verify step</td><td><b>Real</b>, TESTNET</td></tr>
+        <tr><td>Paid 200, escrow transfers</td><td><b>Pending a CDP key</b>; run in <code>simulated</code> mode, <code>moved: false</code></td></tr>
+        <tr><td>Capital One Nessie mirror</td><td>Built, not run</td></tr>
+        <tr><td>Figma plugin</td><td>Tested against a stub of the Figma API; the shared deck came through the PPTX import</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>Verdict words are fixed strings: "Passed the screen", "Needs lab testing", "Unable to verify". A screening result, not a lab test.</span><span>6 / 7</span></div>
+</section>
+
+<!-- 7 · HARDWARE + INFRA -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Hardware blueprints, deployment and the design pipeline</div><div class="n">7 / 7</div></div>
+  <div class="body c3">
+    <div class="im"><img src="../../pillgate/diagrams/01_wiring_overview.png"></div>
+    <div class="im"><img src="../../pillgate/diagrams/03_chamber_cross_sections.png"></div>
+    <div class="box">
+      <h2>Deployment</h2>
+      <table>
+        <tr><td><b>Site</b></td><td>Vercel <code>pill-site</code> → pillmeifyoucan.health (+www)</td></tr>
+        <tr><td><b>Clinic app</b></td><td>Vercel <code>pill-app</code> → app.pillmeifyoucan.health</td></tr>
+        <tr><td><b>DNS</b></td><td>Porkbun: <code>A @ 76.76.21.21</code>, <code>CNAME www, app → cname.vercel-dns.com</code></td></tr>
+        <tr><td><b>Station</b></td><td>laptop: <code>./start.sh both</code> → :8000 live (serial auto-detect) · :8001 replay of the real run</td></tr>
+        <tr><td><b>Pay</b></td><td>laptop: <code>npm run serve</code> → :8402 (402 live; paid 200 needs <code>CDP_*</code> in <code>.env</code>)</td></tr>
+        <tr><td><b>Phones</b></td><td>venue Wi-Fi: <code>http://&lt;laptop-ip&gt;:8001</code>; public: <code>start.sh online</code> (ngrok + PIN)</td></tr>
+      </table>
+      <h2 style="margin-top:16px">Design from code</h2>
+      <ul>
+        <li><code>figma/deck.json</code> (21 slides, every text, token and image) → <code>build-deck.mjs</code> → HTML deck + PDF.</li>
+        <li><code>build-pptx.mjs</code> (pptxgenjs) → <code>pill-deck.pptx</code> → Figma Slides import (Inter substitution handled by a width estimate).</li>
+        <li><code>plugin/</code>: a Figma plugin that draws the same JSON (tested against a stub of the Plugin API).</li>
+        <li><code>STAGE-LOG.md</code>: four stages timed from git, tools, 1–5 rating, what broke.</li>
+      </ul>
+      <h2 style="margin-top:16px">Video pipeline</h2>
+      <p>bash + ffmpeg: 12 cuts from one take, highlighter-karaoke captions from word timings, sidechain-ducked lofi bed (−29 LUFS bed, −16 LUFS mix, TP ≤ −1.5), 63-input SFX bus, colour grade; <code>pitch/video/edit/build-v13.sh</code>.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Blueprints: wiring overview, breadboard layout, chamber cross-sections (pillgate/diagrams). CAD in pillgate/cad (OpenSCAD).</span><span>7 / 7 · Thank you, Cal Hacks.</span></div>
+</section>
+</body></html>
