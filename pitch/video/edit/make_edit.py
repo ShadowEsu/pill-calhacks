@@ -559,7 +559,7 @@ sfx_ev = [("whoosh", max(0.0, t - 0.12)) for t in
 sfx_ev += [("pop", o["T0"]) for o in OVL if not o["mov"]] + [("uhoh", to_out("C12", 168.50)), ("ding", END_START + 0.30)]
 sfx_ev += [("thud", T) for T in SHAKES] + [("plop", to_out("C6", 83.46))] + [("water", T - 0.05) for T in WATER]
 sfx_ev += [("pop", T) for T in PILL_POPS]
-SFX_GAIN.update({"thud": 0.22, "plop": 0.18, "water": 0.14})
+SFX_GAIN.update({"thud": 0.15, "plop": 0.18, "water": 0.14})
 SFX = [s for s in SFX_GAIN if any(n == s for n, _ in sfx_ev)]
 iSFX = iPA + 1 + len(OVL)
 fc.append(f"{pa}loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asplit=2[vo][vsc]")
@@ -576,7 +576,9 @@ for k, s in enumerate(SFX):
         ms = int(round(t0 * 1000))
         fc.append(f"[{s}{m}]adelay={ms}|{ms}[{s}d{m}]"); sfx_labels.append(f"[{s}d{m}]")
 fc.append("".join(sfx_labels) + f"amix=inputs={len(sfx_labels)}:normalize=0:duration=longest[sfx]")
-fc.append("[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[aout]")
+# the brick-wall limiter after loudnorm keeps the sfx transients under -1.5 dBTP after AAC (v10 first render: +0.4 dBTP)
+fc.append("[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=192000,"
+          "alimiter=limit=0.75:attack=1:release=50:level=disabled,aresample=48000[aout]")
 
 graph = ";\n".join(fc)
 open(os.path.join(HERE, "graph.txt"), "w").write(graph + "\n")
