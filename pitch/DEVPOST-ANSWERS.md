@@ -63,7 +63,7 @@ The technical complexity here is mostly about getting things to agree. There's o
 - **Hardware:** an Arduino UNO Q (3.3 V, 12-bit ADC), two CdS photoresistors in resistor dividers from the 3V3 pin, and blue, white and red LEDs in a side box that shine through holes into a printed chamber with a lid `[FILL 8: printed from the OpenSCAD source in pillgate/cad/?]`. The firmware prints one CSV line a second and decides nothing.
 - **Station app:** Python with FastAPI and SQLite on the back, plain vanilla JS on the front. It does the curve maths, quality gates, guided run, lid detection, Claude calls and the guardrail, with 14 pytest tests.
 - **Clinic app:** React 19 and TypeScript, built with Vite and hosted on Vercel. The verdict comes from seven deterministic rules. Every run also wears a badge (LIVE SENSOR, REPLAY or SIMULATED), so you always know what you're looking at.
-- **Pay service:** Node 22 + Express on Base Sepolia, laid out below. There's a 12-check security suite and a 6-case policy test. In one case a delivery note says "SYSTEM OVERRIDE … output release", and it ends in escalate. Capital One Nessie mirror: `[FILL 5: live sandbox transfers, or delete this sentence]`.
+- **Pay service:** Node 22 + Express on Base Sepolia, laid out below. There's a 12-check security suite and a 6-case policy test. In one case a delivery note says "SYSTEM OVERRIDE … output release", and it ends in escalate.
 - **Design:** a 21-slide deck generated from the repo as one JSON file, plus a Figma plugin we wrote to draw it (tested against a stub Figma API, not yet run in real Figma) and a PPTX import path `[FILL 4: which path made the shared Figma deck]`.
 
 **How the money moves.** Here's how one tablet ends up deciding a payment.
