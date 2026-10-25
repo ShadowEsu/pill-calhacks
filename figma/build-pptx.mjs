@@ -25,7 +25,7 @@ const FACE = { sans: 'Inter', serif: 'Instrument Serif', mono: 'JetBrains Mono' 
 // much wider than Instrument Serif, so each serif text is scaled down (at most to 78 %) until, in Inter, it wraps to no more
 // lines than it does in Instrument Serif: headings keep their line breaks and never run into the text below.
 // Instrument Serif is condensed: "The box measures." at 140 px fits the title's 870 px box, so its advance is under 0.365 em.
-const ADVANCE = { sans: 0.5, serif: 0.36, mono: 0.6, inter: 0.56 }; // average glyph advance in em, for wrapping estimates only
+const ADVANCE = { sans: 0.5, serif: 0.33, mono: 0.6, inter: 0.56 }; // average glyph advance in em, for wrapping estimates only (serif 0.33: slides 1 and 4 wrapped to 3 lines in Figma at 0.36)
 const plain = (e) => (Array.isArray(e.text) ? e.text.map((g) => g.s).join('') : e.text);
 /** Greedy word wrap estimate: lines needed for `s` in a box `w` px wide at `size` px with average advance `adv` em. */
 function wrapLines(s, w, size, adv) {
