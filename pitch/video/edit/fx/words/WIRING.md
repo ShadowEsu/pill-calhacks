@@ -1,0 +1,11 @@
+# Per-word overlays: `triggers.json` (31 triggers; T = `t_in_video`, seconds from C1 frame 0, so add any pre-roll; `xy` = overlay top-left, 1080×1920)
+- **pill** (8) → `fx/words/pill-pop.mov` 300², 0.8 s at `xy` (x 640–760, y 600–900, varied) + `sfx/pop.wav`.
+- **water** (4) → `fx/words/water-magic.mov` 500², 1.2 s, centred on the cup (`xy` = centre − 250) + `fx/words/pour.wav`. Cup centres: C5 on-screen cup icon (370,893); C6 chamber (362,1033); C7 chamber (551,1240); C11 chamber (186,1290) at 149.1 s, (152,1450) at 153.9 s.
+- **crush** (2, "pound"/"pounding", C7) → `fx/words/shake-flash.mov` full-frame at 0,0 (0.27 s) + `fx/words/thud.wav` on T, on top of your existing crop shake.
+- **drop** (4, "inside") → `fx/words/plop.wav` + `fx/anim/sparkle-burst.mov` 600², 1.5 s, centred on the cup (C7 (551,1240)); skip C10 104.76 ("no lights inside") if it reads wrong.
+- **hardware** (7) → `fx/anim/arrow-point.mov` 400², 1.5 s, tip at canvas (62,338): x = target_x − 62, y = target_y − 338.
+- **countdown** (4) → `fx/anim/countdown-ring.mov` 500², 4 s (C8 already has one at 108.84 src; use the others or skip duplicates).
+- **result** (2, "unable"/"verify", C12) → `fx/anim/answers-bounce.mov` 900×420, 3 s, once on "unable" + `sfx/uhoh.wav`.
+- Each instance: `-itsoffset T -i X.mov` (or `[n:v]setpts=PTS+T/TB[ov]`), then `[v][ov]overlay=x:y:eof_action=pass:enable='between(t,T,T+d)'[v]`.
+- Audio: `[n:a]adelay=T*1000:all=1[s]` and amix into the stem; the wavs are 48 kHz mono, −1 dBTP, so set the gain in the mix (~0.35).
+- Regenerate: `python3 fx/words/make_triggers.py` (reads CUTS from make_edit.py); overlays: `nice -n 15 node fx/words/render_words.mjs`.

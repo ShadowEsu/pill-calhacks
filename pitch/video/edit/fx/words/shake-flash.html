@@ -1,0 +1,13 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>html,body{margin:0;background:transparent;overflow:hidden}#f{width:1080px;height:1920px;background:#fff}</style>
+<div id="f"></div>
+<script>
+window.ANIM = { w: 1080, h: 1920, dur: 0.25 };
+// Impact flash: frame 0 white at 40 % alpha, frame 1 at 15 %, then transparent (the shake is done in ffmpeg).
+window.render = (t) => {
+  const i = Math.round(t * 30);
+  document.getElementById('f').style.opacity = i === 0 ? 0.4 : i === 1 ? 0.15 : 0;
+};
+window.render(0);
+</script>

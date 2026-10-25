@@ -1,0 +1,326 @@
+{
+ "meta": {
+  "note": "t_in_video is relative to the first frame of C1 (add any pre-roll); t_in_cut from CUTS src in make_edit.py; raw_t = whisper word onset in preston-pitch-raw.mp4",
+  "cut_starts": {
+   "C1": 0.0,
+   "C2": 4.013,
+   "C3": 9.38,
+   "C4": 18.796,
+   "C5": 26.479,
+   "C6": 44.946,
+   "C7": 60.963,
+   "C8": 80.429,
+   "C9": 88.946,
+   "C10": 101.163,
+   "C11": 110.046,
+   "C12": 125.779
+  },
+  "counts": {
+   "pill": 8,
+   "water": 4,
+   "crush": 2,
+   "drop": 4,
+   "hardware": 7,
+   "countdown": 4,
+   "result": 2
+  }
+ },
+ "triggers": [
+  {
+   "word": "pill",
+   "cls": "pill",
+   "raw_t": 45.58,
+   "cut_id": "C1",
+   "t_in_cut": 1.28,
+   "t_in_video": 1.28,
+   "xy": [
+    640,
+    600
+   ]
+  },
+  {
+   "word": "pill",
+   "cls": "pill",
+   "raw_t": 46.66,
+   "cut_id": "C1",
+   "t_in_cut": 2.36,
+   "t_in_video": 2.36,
+   "xy": [
+    700,
+    730
+   ]
+  },
+  {
+   "word": "hardware",
+   "cls": "hardware",
+   "raw_t": 47.2,
+   "cut_id": "C1",
+   "t_in_cut": 2.9,
+   "t_in_video": 2.9
+  },
+  {
+   "word": "pills",
+   "cls": "pill",
+   "raw_t": 9.44,
+   "cut_id": "C2",
+   "t_in_cut": 1.24,
+   "t_in_video": 5.253,
+   "xy": [
+    760,
+    860
+   ]
+  },
+  {
+   "word": "pills",
+   "cls": "pill",
+   "raw_t": 10.6,
+   "cut_id": "C2",
+   "t_in_cut": 2.4,
+   "t_in_video": 6.413,
+   "xy": [
+    640,
+    689
+   ]
+  },
+  {
+   "word": "pill",
+   "cls": "pill",
+   "raw_t": 62.64,
+   "cut_id": "C5",
+   "t_in_cut": 12.79,
+   "t_in_video": 39.269,
+   "xy": [
+    700,
+    819
+   ]
+  },
+  {
+   "word": "water",
+   "cls": "water",
+   "raw_t": 67.24,
+   "cut_id": "C5",
+   "t_in_cut": 17.39,
+   "t_in_video": 43.869,
+   "xy": [
+    120,
+    643
+   ]
+  },
+  {
+   "word": "inside",
+   "cls": "drop",
+   "raw_t": 67.48,
+   "cut_id": "C5",
+   "t_in_cut": 17.63,
+   "t_in_video": 44.109
+  },
+  {
+   "word": "water",
+   "cls": "water",
+   "raw_t": 73.24,
+   "cut_id": "C6",
+   "t_in_cut": 4.89,
+   "t_in_video": 49.836,
+   "xy": [
+    112,
+    783
+   ]
+  },
+  {
+   "word": "medicine",
+   "cls": "pill",
+   "raw_t": 83.74,
+   "cut_id": "C6",
+   "t_in_cut": 15.39,
+   "t_in_video": 60.336,
+   "xy": [
+    760,
+    648
+   ]
+  },
+  {
+   "word": "pound",
+   "cls": "crush",
+   "raw_t": 85.72,
+   "cut_id": "C7",
+   "t_in_cut": 1.32,
+   "t_in_video": 62.283
+  },
+  {
+   "word": "pounding",
+   "cls": "crush",
+   "raw_t": 88.68,
+   "cut_id": "C7",
+   "t_in_cut": 4.28,
+   "t_in_video": 65.243
+  },
+  {
+   "word": "countdown",
+   "cls": "countdown",
+   "raw_t": 93.72,
+   "cut_id": "C7",
+   "t_in_cut": 9.32,
+   "t_in_video": 70.283
+  },
+  {
+   "word": "medicine",
+   "cls": "pill",
+   "raw_t": 95.32,
+   "cut_id": "C7",
+   "t_in_cut": 10.92,
+   "t_in_video": 71.883,
+   "xy": [
+    640,
+    778
+   ]
+  },
+  {
+   "word": "inside",
+   "cls": "drop",
+   "raw_t": 95.54,
+   "cut_id": "C7",
+   "t_in_cut": 11.14,
+   "t_in_video": 72.103
+  },
+  {
+   "word": "countdown",
+   "cls": "countdown",
+   "raw_t": 107.4,
+   "cut_id": "C8",
+   "t_in_cut": 3.5,
+   "t_in_video": 83.929
+  },
+  {
+   "word": "seconds",
+   "cls": "countdown",
+   "raw_t": 109.12,
+   "cut_id": "C8",
+   "t_in_cut": 5.22,
+   "t_in_video": 85.649
+  },
+  {
+   "word": "hardware",
+   "cls": "hardware",
+   "raw_t": 113.64,
+   "cut_id": "C9",
+   "t_in_cut": 1.19,
+   "t_in_video": 90.136
+  },
+  {
+   "word": "Arduino",
+   "cls": "hardware",
+   "raw_t": 115.04,
+   "cut_id": "C9",
+   "t_in_cut": 2.59,
+   "t_in_video": 91.536
+  },
+  {
+   "word": "CPU",
+   "cls": "hardware",
+   "raw_t": 116.7,
+   "cut_id": "C9",
+   "t_in_cut": 4.25,
+   "t_in_video": 93.196
+  },
+  {
+   "word": "lights",
+   "cls": "hardware",
+   "raw_t": 121.76,
+   "cut_id": "C9",
+   "t_in_cut": 9.31,
+   "t_in_video": 98.256
+  },
+  {
+   "word": "lights",
+   "cls": "hardware",
+   "raw_t": 127.84,
+   "cut_id": "C10",
+   "t_in_cut": 3.14,
+   "t_in_video": 104.303
+  },
+  {
+   "word": "inside",
+   "cls": "drop",
+   "raw_t": 128.3,
+   "cut_id": "C10",
+   "t_in_cut": 3.6,
+   "t_in_video": 104.763
+  },
+  {
+   "word": "water",
+   "cls": "water",
+   "raw_t": 149.14,
+   "cut_id": "C11",
+   "t_in_cut": 1.74,
+   "t_in_video": 111.786,
+   "xy": [
+    -64,
+    1040
+   ]
+  },
+  {
+   "word": "countdown",
+   "cls": "countdown",
+   "raw_t": 150.6,
+   "cut_id": "C11",
+   "t_in_cut": 3.2,
+   "t_in_video": 113.246
+  },
+  {
+   "word": "inside",
+   "cls": "drop",
+   "raw_t": 153.18,
+   "cut_id": "C11",
+   "t_in_cut": 5.78,
+   "t_in_video": 115.826
+  },
+  {
+   "word": "water",
+   "cls": "water",
+   "raw_t": 153.9,
+   "cut_id": "C11",
+   "t_in_cut": 6.5,
+   "t_in_video": 116.546,
+   "xy": [
+    -98,
+    1200
+   ]
+  },
+  {
+   "word": "lights",
+   "cls": "hardware",
+   "raw_t": 158.04,
+   "cut_id": "C11",
+   "t_in_cut": 10.64,
+   "t_in_video": 120.686
+  },
+  {
+   "word": "unable",
+   "cls": "result",
+   "raw_t": 169.3,
+   "cut_id": "C12",
+   "t_in_cut": 5.4,
+   "t_in_video": 131.179
+  },
+  {
+   "word": "verify",
+   "cls": "result",
+   "raw_t": 169.76,
+   "cut_id": "C12",
+   "t_in_cut": 5.86,
+   "t_in_video": 131.639
+  },
+  {
+   "word": "pills",
+   "cls": "pill",
+   "raw_t": 177.46,
+   "cut_id": "C12",
+   "t_in_cut": 13.56,
+   "t_in_video": 139.339,
+   "xy": [
+    700,
+    607
+   ]
+  }
+ ]
+}

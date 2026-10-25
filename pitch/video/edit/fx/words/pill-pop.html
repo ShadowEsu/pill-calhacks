@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>html,body{margin:0;background:transparent;overflow:hidden}svg{display:block}</style>
+<script src="../anim/lib.js"></script>
+<svg id="s" width="300" height="300" viewBox="0 0 300 300"></svg>
+<script>
+window.ANIM = { w: 300, h: 300, dur: 0.8 };
+// Cartoon capsule (purple + white halves, dark outline), tilted, pops in with squash-and-stretch,
+// two tiny sparkles twinkle beside it, everything fades out over the last 0.2 s.
+const PURPLE = '#7c5cff';
+const STAR = 'M0 -22 Q4 -4 22 0 Q4 4 0 22 Q-4 4 -22 0 Q-4 -4 0 -22 Z';
+$('s').innerHTML = `
+<g id="all">
+ <g transform="translate(150 158)"><g id="pill">
+  <g transform="rotate(-35)">
+   <rect x="-92" y="-40" width="184" height="80" rx="40" fill="${INK}" transform="translate(0 9)"/>
+   <path d="M0 -40 L-52 -40 A40 40 0 0 0 -52 40 L0 40 Z" fill="${PURPLE}"/>
+   <path d="M0 -40 L52 -40 A40 40 0 0 1 52 40 L0 40 Z" fill="${WHITE}"/>
+   <rect x="-92" y="-40" width="184" height="80" rx="40" fill="none" stroke="${INK}" stroke-width="10"/>
+   <line x1="0" y1="-40" x2="0" y2="40" stroke="${INK}" stroke-width="8"/>
+   <path d="M-70 -20 L-30 -22" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity="0.75"/>
+   <path d="M22 -22 L62 -20" stroke="${GREY}" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+  </g>
+ </g></g>
+ <g id="sp1" transform="translate(250 62)"><path d="${STAR}" fill="${YELLOW}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/></g>
+ <g id="sp2" transform="translate(52 242)"><path d="${STAR}" fill="${YELLOW}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/></g>
+</g>`;
+window.render = (t) => {
+  const p = springPop(t);
+  const [sx, sy] = squash(t - 0.08, 0.32);
+  $('pill').setAttribute('transform', `scale(${p * sx} ${p * sy})`);
+  const tw = (u) => (u <= 0 ? 0 : Math.max(0, Math.sin(Math.PI * clamp(u / 0.42))) * 1.0);
+  const s1 = tw(t - 0.12), s2 = tw(t - 0.22);
+  $('sp1').setAttribute('transform', `translate(250 62) rotate(${t * 180}) scale(${s1})`);
+  $('sp2').setAttribute('transform', `translate(52 242) rotate(${-t * 180}) scale(${s2 * 0.8})`);
+  $('all').style.opacity = 1 - local(t, 0.6, 0.2);
+};
+window.render(0);
+</script>
