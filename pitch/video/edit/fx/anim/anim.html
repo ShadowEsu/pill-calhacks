@@ -1,0 +1,171 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script>
+// Frame-stepped cartoon overlays. render_anim.mjs calls setup(name) then frame(t) per frame
+// and reads the canvas as PNG (alpha preserved).
+const OUT = '#1b1b2a';            // dark outline
+const PAL = { white: '#ffffff', yellow: '#ffd84a', mint: '#6fe3b5', sky: '#69c3ff', pink: '#ff8fb1' };
+const cv = document.getElementById('c');
+const g = cv.getContext('2d');
+let S = null;
+
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+const ease = (x) => 1 - Math.pow(1 - x, 3);
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+function rrect(x, y, w, h, r) {
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+
+function capsule(L, W, c1, c2, lw) {
+  const r = W / 2;
+  // left half c1, right half c2, clipped to capsule
+  g.save(); rrect(-L / 2, -r, L, W, r); g.clip();
+  g.fillStyle = c1; g.fillRect(-L / 2, -r, L / 2, W);
+  g.fillStyle = c2; g.fillRect(0, -r, L / 2, W);
+  // shine
+  g.fillStyle = 'rgba(255,255,255,0.55)'; rrect(-L / 2 + r * 0.6, -r * 0.6, L * 0.55, r * 0.38, r * 0.19); g.fill();
+  g.restore();
+  g.lineWidth = lw; g.strokeStyle = OUT; g.lineJoin = 'round';
+  g.beginPath(); g.moveTo(0, -r); g.lineTo(0, r); g.stroke();
+  rrect(-L / 2, -r, L, W, r); g.stroke();
+}
+
+function tablet(R, c, lw) {
+  g.beginPath(); g.arc(0, 0, R, 0, Math.PI * 2); g.fillStyle = c; g.fill();
+  g.fillStyle = 'rgba(255,255,255,0.5)'; g.beginPath(); g.ellipse(-R * 0.35, -R * 0.4, R * 0.32, R * 0.16, -0.6, 0, Math.PI * 2); g.fill();
+  g.lineWidth = lw; g.strokeStyle = OUT; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(-R * 0.55, 0); g.lineTo(R * 0.55, 0); g.stroke();  // score line
+  g.beginPath(); g.arc(0, 0, R, 0, Math.PI * 2); g.stroke();
+}
+
+function star4(R, c, lw) {
+  const r = R * 0.32;
+  g.beginPath();
+  for (let i = 0; i < 8; i++) {
+    const a = -Math.PI / 2 + i * Math.PI / 4, rad = i % 2 ? r : R;
+    const x = Math.cos(a) * rad, y = Math.sin(a) * rad;
+    i ? g.lineTo(x, y) : g.moveTo(x, y);
+  }
+  g.closePath(); g.fillStyle = c; g.fill();
+  g.lineWidth = lw; g.strokeStyle = OUT; g.lineJoin = 'round'; g.stroke();
+}
+
+const SETUPS = {
+  'pill-rain'() {
+    cv.width = 1080; cv.height = 1920;
+    const R = rng(13), items = [];
+    const pairs = [[PAL.yellow, PAL.white], [PAL.mint, PAL.white], [PAL.sky, PAL.yellow], [PAL.pink, PAL.white], [PAL.sky, PAL.white]];
+    const N = 34;
+    for (let i = 0; i < N; i++) {
+      const kind = R() < 0.62 ? 'cap' : 'tab';
+      const sc = 0.7 + R() * 0.7;
+      items.push({
+        kind, sc,
+        x: 60 + ((i + R() * 0.8) / N) * 960,
+        delay: R() * 1.6,
+        y0: -120 - R() * 260,
+        v: 700 + R() * 650,          // px/s
+        rot: R() * Math.PI * 2, spin: (R() - 0.5) * 3.2,
+        wob: R() * 6.28,
+        cols: pairs[Math.floor(R() * pairs.length)],
+        tc: [PAL.white, PAL.yellow, PAL.mint, PAL.sky][Math.floor(R() * 4)],
+      });
+    }
+    S = { dur: 3.5, items };
+  },
+  'sparkle-burst'() {
+    cv.width = 600; cv.height = 600;
+    const R = rng(7), items = [];
+    const cols = [PAL.yellow, PAL.white, PAL.mint, PAL.sky];
+    const N = 10;
+    for (let i = 0; i < N; i++) items.push({
+      a: (i / N) * Math.PI * 2 + (R() - 0.5) * 0.35,
+      d: 170 + R() * 90, size: 26 + R() * 26, delay: R() * 0.12,
+      c: cols[i % cols.length], spin: (R() - 0.5) * 3,
+    });
+    S = { dur: 1.5, items };
+  },
+  'confetti'() {
+    cv.width = 1080; cv.height = 1920;
+    const R = rng(29), items = [];
+    const cols = [PAL.yellow, PAL.mint, PAL.sky, PAL.white];
+    for (let i = 0; i < 90; i++) items.push({
+      x: R() * 1080, y0: -1100 + R() * 1200, v: 560 + R() * 420,
+      sway: 30 + R() * 60, freq: 1.5 + R() * 2.5, ph: R() * 6.28,
+      w: 18 + R() * 14, h: 34 + R() * 26, c: cols[i % 4],
+      flip: 4 + R() * 7, rot: R() * 6.28, spin: (R() - 0.5) * 4,
+      kind: R() < 0.35 ? 'curl' : 'rect',
+    });
+    S = { dur: 3, items };
+  },
+};
+
+const FRAMES = {
+  'pill-rain'(t) {
+    const fade = clamp((S.dur - t) / 0.5, 0, 1);
+    for (const p of S.items) {
+      const tt = t - p.delay; if (tt < 0) continue;
+      const y = p.y0 + p.v * tt + 120 * tt * tt;   // slight acceleration
+      if (y > 2100) continue;
+      g.save(); g.globalAlpha = fade;
+      g.translate(p.x + Math.sin(p.wob + tt * 3) * 14, y);
+      g.rotate(p.rot + p.spin * tt); g.scale(p.sc, p.sc);
+      if (p.kind === 'cap') capsule(150, 62, p.cols[0], p.cols[1], 8 / p.sc);
+      else tablet(42, p.tc, 8 / p.sc);
+      g.restore();
+    }
+  },
+  'sparkle-burst'(t) {
+    // centre flash: pops up then shrinks away (solid colour, no muddy alpha)
+    const f = ease(clamp(t / 0.12, 0, 1)), fo = clamp(1 - (t - 0.12) / 0.3, 0, 1);
+    if (fo > 0) {
+      const k = (0.4 + f * 0.9) * ease(fo);
+      g.save(); g.translate(300, 300); g.rotate(t * 1.5); g.scale(k, k);
+      star4(95, PAL.yellow, 9); g.restore();
+    }
+    // ring
+    const rt = clamp(t / 0.55, 0, 1);
+    if (rt < 1) {
+      g.save(); g.globalAlpha = 1 - rt; g.lineWidth = 14 * (1 - rt) + 2;
+      g.strokeStyle = PAL.yellow; g.beginPath(); g.arc(300, 300, 40 + ease(rt) * 220, 0, Math.PI * 2); g.stroke();
+      g.restore();
+    }
+    for (const s of S.items) {
+      const tt = t - s.delay; if (tt < 0) continue;
+      const p = clamp(tt / 0.9, 0, 1), e = ease(p);
+      const alpha = clamp((1.45 - t) / 0.55, 0, 1);
+      const sc = Math.sin(Math.min(1, tt / 1.2) * Math.PI) * 0.8 + (p < 0.15 ? 0 : 0.2);
+      g.save(); g.globalAlpha = alpha;
+      g.translate(300 + Math.cos(s.a) * s.d * e, 300 + Math.sin(s.a) * s.d * e);
+      g.rotate(s.spin * tt); g.scale(Math.max(0.05, sc), Math.max(0.05, sc));
+      star4(s.size, s.c, 6); g.restore();
+    }
+  },
+  'confetti'(t) {
+    const fade = clamp((S.dur - t) / 0.5, 0, 1);
+    for (const p of S.items) {
+      const y = p.y0 + p.v * t; if (y < -100 || y > 2050) continue;
+      const x = p.x + Math.sin(p.ph + t * p.freq) * p.sway;
+      g.save(); g.globalAlpha = fade; g.translate(x, y); g.rotate(p.rot + p.spin * t);
+      g.fillStyle = p.c; g.strokeStyle = OUT; g.lineWidth = 5; g.lineJoin = 'round'; g.lineCap = 'round';
+      if (p.kind === 'rect') {
+        const fx = Math.cos(p.ph + t * p.flip);       // 3D flip
+        g.scale(Math.abs(fx) < 0.08 ? 0.08 * Math.sign(fx || 1) : fx, 1);
+        rrect(-p.w / 2, -p.h / 2, p.w, p.h, 4); g.fill(); g.stroke();
+      } else {
+        // curly ribbon: thick coloured squiggle with dark outline
+        const path = () => { g.beginPath(); for (let i = 0; i <= 12; i++) { const u = i / 12; const yy = (u - 0.5) * p.h * 2; const xx = Math.sin(u * Math.PI * 2 + t * p.flip) * 12; i ? g.lineTo(xx, yy) : g.moveTo(xx, yy); } };
+        path(); g.lineWidth = 18; g.strokeStyle = OUT; g.stroke();
+        path(); g.lineWidth = 9; g.strokeStyle = p.c; g.stroke();
+      }
+      g.restore();
+    }
+  },
+};
+
+window.setup = (name) => { SETUPS[name](); return { w: cv.width, h: cv.height, dur: S.dur }; };
+window.frame = (name, t) => { g.clearRect(0, 0, cv.width, cv.height); FRAMES[name](t); return cv.toDataURL('image/png'); };
+</script></body></html>
