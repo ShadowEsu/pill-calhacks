@@ -1,0 +1,59 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:"Inter";src:url("../../fonts/Inter-Variable.ttf");font-weight:100 900}
+html,body{margin:0;background:transparent;overflow:hidden}svg{display:block}
+.t{font-family:"Inter";font-weight:800;font-size:54px;letter-spacing:-0.5px;paint-order:stroke;stroke-linejoin:round}
+</style>
+<script src="lib.js"></script>
+<svg id="s" width="900" height="420" viewBox="0 0 900 420"></svg>
+<script>
+window.ANIM = { w: 900, h: 420, dur: 3 };
+const BW = 640, BH = 104;
+const BADGES = [
+  { label: 'Passed the screen', fill: MINT, dot: WHITE, y: 72, t0: 0.05 },
+  { label: 'Needs lab testing', fill: AMBER, dot: WHITE, y: 210, t0: 0.4 },
+  { label: 'Unable to verify', fill: GREY, dot: WHITE, y: 348, t0: 0.75 },
+];
+// spiky "!?" puff (cartoon exclamation cloud)
+const puff = (() => {
+  const n = 11, pts = [];
+  for (let i = 0; i < n * 2; i++) {
+    const a = (i / (n * 2)) * 2 * Math.PI, r = i % 2 ? 58 : 82;
+    pts.push(`${(Math.cos(a) * r * 1.12).toFixed(1)} ${(Math.sin(a) * r).toFixed(1)}`);
+  }
+  return 'M' + pts.join(' L') + ' Z';
+})();
+$('s').innerHTML = BADGES.map((b, i) => `
+<g id="b${i}">
+  <rect x="${-BW / 2}" y="${-BH / 2 + 8}" width="${BW}" height="${BH}" rx="${BH / 2}" fill="${INK}"/>
+  <rect x="${-BW / 2}" y="${-BH / 2}" width="${BW}" height="${BH}" rx="${BH / 2}" fill="${b.fill}" stroke="${INK}" stroke-width="9"/>
+  <rect x="${-BW / 2 + 26}" y="${-BH / 2 + 14}" width="${BW * 0.42}" height="12" rx="6" fill="#fff" opacity="0.45"/>
+  <circle cx="${-BW / 2 + 60}" cy="0" r="22" fill="${b.dot}" stroke="${INK}" stroke-width="8"/>
+  <text class="t" x="${-BW / 2 + 104}" y="19" fill="${WHITE}" stroke="${INK}" stroke-width="11">${b.label}</text>
+</g>`).join('') + `
+<g id="puff">
+  <path d="${puff}" fill="${INK}" transform="translate(0 7)" stroke="${INK}" stroke-width="9" stroke-linejoin="round"/>
+  <path d="${puff}" fill="${WHITE}" stroke="${INK}" stroke-width="9" stroke-linejoin="round"/>
+  <text class="t" x="0" y="25" text-anchor="middle" font-size="72" fill="${YELLOW}" stroke="${INK}" stroke-width="12">!?</text>
+</g>`;
+
+const CX = 360;               // badge centre x; puff sits to the right of the third badge
+window.render = (t) => {
+  BADGES.forEach((b, i) => {
+    const u = t - b.t0;
+    const rise = u <= 0 ? 1 : 1 - easeOutBack(local(u, 0, 0.32), 2.4); // 1 → 0 with overshoot
+    const [sx, sy] = squash(u - 0.22, 0.2);
+    const land = u > 0 ? 1 : 0;
+    let rot = 3 * wiggle(u - 0.2, 16, 5) * (i % 2 ? -1 : 1);
+    if (i === 2) rot += 7 * Math.exp(-1.6 * Math.max(0, t - 1.45)) * Math.sin(Math.max(0, t - 1.45) * 26) * (t > 1.45 ? 1 : 0);
+    $('b' + i).setAttribute('transform', `translate(${CX} ${b.y + rise * 160}) rotate(${rot}) scale(${sx * land} ${sy * land})`);
+    $('b' + i).style.opacity = clamp(u / 0.08);
+  });
+  const u = t - 1.6;
+  const ps = springPop(u) * 0.85;
+  const [px, py] = squash(u, 0.25);
+  $('puff').setAttribute('transform', `translate(785 ${300 - 10 * Math.sin(Math.max(0, u) * 7)}) rotate(${-12 + 14 * wiggle(u, 18, 3)}) scale(${ps * px} ${ps * py})`);
+};
+window.render(0);
+</script>

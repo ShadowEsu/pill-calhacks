@@ -1,0 +1,36 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>html,body{margin:0;background:transparent;overflow:hidden}svg{display:block}</style>
+<script src="lib.js"></script>
+<svg id="s" width="400" height="400" viewBox="0 0 400 400"></svg>
+<script>
+window.ANIM = { w: 400, h: 400, dur: 1.5 };
+// Arrow drawn pointing +x with its tip at the origin, then rotated 135° so it points down-left.
+// The tip rests at canvas (62, 338).
+const ARROW = 'M0 0 L-92 -74 Q-102 -80 -102 -66 L-102 -34 L-230 -38 Q-252 -36 -250 -14 L-250 14 Q-252 36 -230 38 L-102 34 L-102 66 Q-102 80 -92 74 Z';
+const SPEED = '<line x1="-270" y1="-70" x2="-340" y2="-70"/><line x1="-280" y1="0" x2="-370" y2="0"/><line x1="-270" y1="70" x2="-340" y2="70"/>';
+$('s').innerHTML = `
+<g id="lines" stroke-linecap="round">
+  <g stroke="${INK}" stroke-width="20">${SPEED}</g>
+  <g stroke="${WHITE}" stroke-width="9">${SPEED}</g>
+</g>
+<g id="arrow">
+  <path d="${ARROW}" fill="${INK}" stroke="${INK}" stroke-width="14" stroke-linejoin="round" transform="translate(0 10)"/>
+  <path d="${ARROW}" fill="${YELLOW}" stroke="${INK}" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M-224 -20 L-118 -18" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity="0.7"/>
+</g>`;
+const TIP = [62, 338], ANG = 135;
+window.render = (t) => {
+  // slide in from the top-right (along the arrow's own axis), then bob twice toward the target
+  const slide = 320 * (1 - easeOutBack(local(t, 0, 0.36), 2.2));
+  const bt = t - 0.42;
+  const bob = bt > 0 && bt < 0.9 ? 34 * Math.abs(Math.sin((Math.PI * bt) / 0.45)) : 0;
+  const back = slide + bob;                            // distance pulled back from the tip position
+  const [sx, sy] = squash(t - 0.3, 0.18);
+  const tf = `translate(${TIP[0]} ${TIP[1]}) rotate(${ANG}) translate(${-back} 0)`;
+  $('arrow').setAttribute('transform', `${tf} scale(${sx} ${sy})`);
+  $('lines').setAttribute('transform', tf);
+  $('lines').style.opacity = t < 0.36 ? 1 : clamp(1 - (t - 0.36) / 0.12);
+};
+window.render(0);
+</script>

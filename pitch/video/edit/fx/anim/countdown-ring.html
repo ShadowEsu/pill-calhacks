@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:"Inter";src:url("../../fonts/Inter-Variable.ttf");font-weight:100 900}
+html,body{margin:0;background:transparent;overflow:hidden}svg{display:block}
+.t{font-family:"Inter";font-weight:800;text-anchor:middle;paint-order:stroke;stroke-linejoin:round}
+</style>
+<script src="lib.js"></script>
+<svg id="s" width="500" height="500" viewBox="0 0 500 500"></svg>
+<script>
+window.ANIM = { w: 500, h: 500, dur: 4 };
+const R = 165, C = 2 * Math.PI * R;
+const ticks = Array.from({ length: 12 }, (_, i) => {
+  const a = (i / 12) * 2 * Math.PI - Math.PI / 2, r0 = R + 34, r1 = R + 50;
+  const seg = `x1="${Math.cos(a) * r0}" y1="${Math.sin(a) * r0}" x2="${Math.cos(a) * r1}" y2="${Math.sin(a) * r1}" stroke-linecap="round"`;
+  return `<line ${seg} stroke="${INK}" stroke-width="16"/><line ${seg} stroke="${WHITE}" stroke-width="7"/>`;
+}).join('');
+$('s').innerHTML = `
+<g id="ring">
+  <circle r="${R}" fill="none" stroke="${INK}" stroke-width="72" transform="translate(0 8)"/>
+  <circle r="${R}" fill="none" stroke="${INK}" stroke-width="72"/>
+  <circle r="${R}" fill="none" stroke="${WHITE}" stroke-width="50"/>
+  <circle id="arc" r="${R}" fill="none" stroke="${YELLOW}" stroke-width="50" stroke-linecap="round" transform="rotate(-90)" stroke-dasharray="0 ${C}"/>
+  <circle r="${R - 25}" fill="none" stroke="${INK}" stroke-width="6"/>
+  <circle r="${R + 25}" fill="none" stroke="${INK}" stroke-width="6"/>
+  <g id="ticks">${ticks}</g>
+  <circle id="head" r="20" fill="${WHITE}" stroke="${INK}" stroke-width="8"/>
+  <g id="num">
+    <text class="t" x="0" y="44" font-size="128" fill="${INK}" stroke="${INK}" stroke-width="18">60<tspan font-size="70" dx="8">s</tspan></text>
+    <text class="t" x="0" y="36" font-size="128" fill="${WHITE}" stroke="${INK}" stroke-width="14">60<tspan font-size="70" dx="8" fill="${YELLOW}">s</tspan></text>
+  </g>
+</g>
+<g id="chk">
+  <circle r="58" fill="${INK}" transform="translate(0 7)"/>
+  <circle r="58" fill="${MINT}" stroke="${INK}" stroke-width="10"/>
+  <path d="M-27 2 L-7 22 L29 -20" fill="none" stroke="${INK}" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-27 2 L-7 22 L29 -20" fill="none" stroke="${WHITE}" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+</g>`;
+
+const FILL0 = 0.35, FILL1 = 3.15;
+window.render = (t) => {
+  // ring pops in, gets a little thump when the fill completes
+  const pop = springPop(t);
+  const [sx, sy] = squash(t, 0.22);
+  const thump = 1 + 0.09 * wiggle(t - FILL1, 18, 6);
+  const out = 1 - easeInBack(local(t, 3.78, 0.22));
+  $('ring').setAttribute('transform', `translate(250 252) scale(${pop * sx * thump * out} ${pop * sy * thump * out})`);
+  // clockwise fill
+  const p = easeInOutCubic(local(t, FILL0, FILL1 - FILL0));
+  $('arc').setAttribute('stroke-dasharray', `${p * C} ${C}`);
+  $('arc').style.opacity = p > 0.002 ? 1 : 0;
+  const a = p * 2 * Math.PI - Math.PI / 2;
+  $('head').setAttribute('cx', Math.cos(a) * R);
+  $('head').setAttribute('cy', Math.sin(a) * R);
+  // number bobs gently while counting, bounces at the end
+  const bob = Math.sin(t * 2 * Math.PI * 1.5) * 4 * (t < FILL1 ? 1 : 0);
+  const ns = 1 + 0.18 * wiggle(t - FILL1, 20, 5);
+  $('num').setAttribute('transform', `translate(0 ${bob}) rotate(${-4 * wiggle(t - FILL1, 14, 4)}) scale(${ns})`);
+  // tick-mark badge pops on top-right and wiggles
+  const u = t - (FILL1 + 0.05);
+  const cs = springPop(u) * out;
+  $('chk').setAttribute('transform', `translate(392 108) rotate(${22 * wiggle(u - 0.12, 24, 3.5)}) scale(${cs})`);
+};
+window.render(0);
+</script>

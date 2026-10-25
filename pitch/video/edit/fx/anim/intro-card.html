@@ -1,0 +1,44 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:"Inter";src:url("../../fonts/Inter-Variable.ttf");font-weight:100 900}
+html,body{margin:0;background:transparent;overflow:hidden}svg{display:block}
+.t{font-family:"Inter";font-weight:800;font-size:132px;letter-spacing:-2px;text-anchor:middle;paint-order:stroke;stroke-linejoin:round}
+</style>
+<script src="lib.js"></script>
+<svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+window.ANIM = { w: 1080, h: 1920, dur: 2.5 };
+const LINES = ['One tablet.', 'One curve.', 'One answer.'];
+const BASE = [800, 960, 1120];
+const T0 = [0.05, 0.42, 0.79];
+const svg = $('s');
+const star = (id) => `<path id="${id}" d="M0 -46 C6 -10 10 -6 46 0 C10 6 6 10 0 46 C-6 10 -10 6 -46 0 C-10 -6 -6 -10 0 -46 Z" fill="${YELLOW}" stroke="${INK}" stroke-width="9" stroke-linejoin="round"/>`;
+svg.innerHTML = LINES.map((s, i) => `<g id="l${i}">
+  <text class="t" x="0" y="10" fill="${INK}" stroke="${INK}" stroke-width="22">${s}</text>
+  <text class="t" x="0" y="0" fill="${WHITE}" stroke="${INK}" stroke-width="16">${s}</text></g>`).join('') +
+  `<g id="sw"><path id="swInk" d="M215 1172 C 400 1140, 640 1196, 868 1150 L 905 1128" pathLength="1" fill="none" stroke="${INK}" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+   <path id="swY" d="M215 1172 C 400 1140, 640 1196, 868 1150 L 905 1128" pathLength="1" fill="none" stroke="${YELLOW}" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/></g>` +
+  star('st0') + star('st1');
+
+window.render = (t) => {
+  const out = (k) => easeInBack(local(t, 2.12 + k * 0.06, 0.3));       // 0 → 1 while exiting
+  for (let i = 0; i < 3; i++) {
+    const u = t - T0[i];
+    const s = springPop(u) * (1 - out(i));
+    const [sx, sy] = squash(u, 0.32);
+    const rot = 6 * wiggle(u, 13, 5) * (i % 2 ? -1 : 1);
+    const drop = -90 * Math.exp(-14 * Math.max(0, u));                 // tiny fall into place
+    $('l' + i).setAttribute('transform', `translate(540 ${BASE[i] + (u > 0 ? drop : 0)}) rotate(${rot}) scale(${sx * s} ${sy * s})`);
+    $('l' + i).style.opacity = u > 0 ? 1 : 0;
+  }
+  const d = 1 - easeOutCubic(local(t, 1.2, 0.42));
+  for (const id of ['swInk', 'swY']) { $(id).style.strokeDasharray = '1 1'; $(id).style.strokeDashoffset = d; }
+  $('sw').style.opacity = t < 1.2 ? 0 : 1 - out(3);
+  [[0, 985, 1030, 1.55], [1, 110, 1100, 1.66]].forEach(([k, x, y, t0]) => {
+    const u = t - t0, s = springPop(u) * 1.1 * (1 - out(3 + k));
+    $('st' + k).setAttribute('transform', `translate(${x} ${y}) rotate(${20 * wiggle(u, 9, 2) + u * 40}) scale(${Math.max(0, s)})`);
+  });
+};
+window.render(0);
+</script>
