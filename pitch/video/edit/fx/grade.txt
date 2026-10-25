@@ -1,0 +1,1 @@
+curves=all='0/0.02 0.22/0.31 0.5/0.61 0.8/0.87 1/0.96',colorbalance=rs=0.05:bs=-0.04:rm=0.03:bm=-0.03,eq=contrast=1.08:saturation=1.2,vignette=angle=PI/5:aspect=9/16,noise=alls=6:allf=t

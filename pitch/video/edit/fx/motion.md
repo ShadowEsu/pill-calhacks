@@ -1,0 +1,13 @@
+# VideoFX motion kit (tested on single frames with bin/ffmpeg; T = absolute out time, S = placements.json scale, X/Y = centre)
+- Grade: per cut, right after `scale=1080:1920` and before captions/stickers: `,$(cat fx/grade.txt)`.
+- Sticker input: `-loop 1 -t <dur+0.5> -i fx/stickers/<name>.png`, then `[n:v]format=rgba,setpts=PTS-STARTPTS+T/TB,<anim>[sN]` and `[bg][sN]overlay=x='X-overlay_w/2':y='Y-overlay_h/2':eval=frame:enable='between(t,T,T+dur)'`.
+- pop (overshoot then settle): `scale=w='2*trunc(iw*0.5*S*if(lt(t-T,0.18),0.2+0.8*sin(PI/2*(t-T)/0.18)*1.12,1+0.12*exp(-(t-T-0.18)*14)*cos((t-T-0.18)*28))/2)':h=-1:eval=frame`.
+- wiggle: `scale=iw*S/2:-1,rotate=a='0.07*sin(2*PI*2.5*(t-T))*exp(-(t-T)*1.2)':ow=hypot(iw\,ih):oh=ow:c=none`.
+- slide-left: `scale=iw*S/2:-1`, overlay `x='X-overlay_w/2+700*pow(max(0\,1-(t-T)/0.25)\,2)'`.
+- sfx: `pop`/`ding`/`whoosh` from sfx/ at T (whoosh 0.08 s early), `adelay=<T*1000>|<T*1000>,volume=0.5`, amix into the music bus.
+- C7 "crush it" speed ramp: split C7 at the "Pounding it" phrase end (src ≈ 90.0) to the "As that countdown" onset (93.02): `setpts=PTS/1.6` on that segment (audio `atempo=1.6` or dip the voice under music there); rest at 1×.
+- Seated cuts (C2–C4, C12 from "because"): slow push-in 1.00→1.08 over the cut: `scale=w='trunc(1080*(1+0.08*t/DUR)/2)*2':h=-2:eval=frame,crop=1080:1920` (same shape as the existing 0.04 push, just 0.08).
+- Punch-in on beats: 6-frame 1.00→1.06→1.00 bump on "Perfect." (C6 t=9.8, C7 t=18.0) using the same scale expr with `1+0.06*sin(PI*min(1,max(0,(t-Tb)/0.2)))`.
+- C11→C12 join: 2-frame white flash + whoosh: on the output `drawbox=c=white@0.85:t=fill:enable='between(t,J-0.033,J+0.033)'` (J = C12 start), whoosh at J-0.1.
+- Three-answer card colour pulse: on the base under the card `eq=saturation='1+0.25*sin(2*PI*1.5*(t-A))':eval=frame:enable='between(t,A,A+1.4)'` (A = ANS_HEAD time); keep cards themselves unpulsed.
+- Colour beats: C12 reveal ("Because guess what") `hue=s=0.6` for 0.4 s then back, sells the "oh no"; end-card dip stays as is.
