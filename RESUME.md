@@ -1,6 +1,10 @@
-# RESUME (written Sun 2026-10-25 ~02:52 PDT, battery 8 %, Mac about to die)
+# RESUME (stand-down note Sun 2026-10-25 14:46 PDT; original written 02:52 when the Mac was at 8 %)
 
-If you are reading this after a shutdown: everything below is pushed to **https://github.com/ShadowEsu/pill-calhacks** (clean history, `main` = 14cbe47 or later) and mirrored to the old `ShadowEsu/pill` (keep that one PRIVATE forever; its old SHAs still hold the purged photos on GitHub's side).
+**Cal Hacks 13.0 is over for Pill** (Preston 14:4x: "we are done"). Final state: Devpost SUBMITTED with 8 links and video yXEmc25dfMw; site https://pillmeifyoucan.health and app https://app.pillmeifyoucan.health stay live on Vercel as deployed; the public repo **https://github.com/ShadowEsu/pill-calhacks** (`main` = 030fe5e or later) holds everything; the Figma Slides deck is https://www.figma.com/deck/xSmcPKdRTVgKI7XzGoqQ0R/pill-deck. Local services (station :8000/:8001, pay :8402, ngrok) were stopped at 14:45 (`~/Downloads/peel/start.sh stop`); restart with `./start.sh both` + `cd pill/pay && npm run serve`. Not deleted yet (BOSS is asking Preston): `~/calhacks-13-deploy/pre-purge-backup.bundle` and the screenshots there. The old `ShadowEsu/pill` repo stays PRIVATE forever (its old SHAs still hold the purged photos). Section 2 below is historical: every item is done.
+
+## 0. Where things are
+- Judges poster: `pitch/onepager/Pill-judges-landscape.pdf` (9 pp). Technical overview: `pitch/onepager/Pill-technical.pdf` (7 pp). Table script: `pitch/TABLE-SCRIPT-SUNDAY.md`. Devpost text: `pitch/DEVPOST-ANSWERS.md`. Coinbase steps: `pitch/COINBASE-X402.md`. Video build: `pitch/video/edit/build-v13.sh`.
+- Judging incident: the UNO Q stopped emitting serial at 10:22 (board hang; needs RESET/replug). `pillgate/app/device.py` now reopens the port after 8 s of silence; the demo ran on the :8001 replay.
 
 ## 1. What is LIVE (nothing to redo)
 - Website **https://pillmeifyoucan.health** (+ www) → Vercel project `pill-site`, deploy `dpl_DAthQmhcfCnVMNHi9RPNWW1xPqvJ` (02:51: #film, night fixes, domain links, robots/sitemap).
