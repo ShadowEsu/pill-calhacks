@@ -5,8 +5,8 @@ If you are reading this after a shutdown: everything below is pushed to **https:
 ## 1. What is LIVE (nothing to redo)
 - Website **https://pillmeifyoucan.health** (+ www) → Vercel project `pill-site`, deploy `dpl_DAthQmhcfCnVMNHi9RPNWW1xPqvJ` (02:51: #film, night fixes, domain links, robots/sitemap).
 - Clinic app **https://app.pillmeifyoucan.health** → Vercel project `pill-app`, deploy `dpl_3CL4hiAswvAKtGgarsmCehh6mNgU` (02:52: nosniff/Referrer-Policy headers, links to the new domain).
-- DNS at Porkbun (account preston@unvibe.site): `A @ 76.76.21.21`, `CNAME www cname.vercel-dns.com`, `CNAME app cname.vercel-dns.com`. Done, verified 200 over https.
-- YouTube, channel "Pill" (@pillmeifyoucan, Google account preston@unvibe.site):
+- DNS at Porkbun (Preston's account): `A @ 76.76.21.21`, `CNAME www cname.vercel-dns.com`, `CNAME app cname.vercel-dns.com`. Done, verified 200 over https.
+- YouTube, channel "Pill" (@pillmeifyoucan, Preston's Google account):
   - Pitch video 1:27, PUBLIC (quiet re-export; the loud clBqG3o4MbA is private): https://www.youtube.com/watch?v=BZCJtnYEurU
   - Animated explainer 2:38, PUBLIC, subtitles only (the narrated cTQpc1VoN00 is private): https://youtu.be/gdZAg-kwQG0
   - Clinic app walkthrough 62 s, Unlisted: https://youtu.be/h8rAvjgKoxo
