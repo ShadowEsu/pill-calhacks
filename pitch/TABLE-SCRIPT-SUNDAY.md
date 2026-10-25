@@ -64,7 +64,7 @@ Then show personal mode: bigger text, recall status per bottle, read-aloud.
 
 **Coinbase or finance judge.** Clinic app tab 3: a delivery with the payment held, the clause quoted, the Release button only after a pass. Then the terminal: `curl -i -X POST localhost:8402/verify -d '{"curve":"B2-07"}'` shows the real `402` with the price. Say: "The paid 200 is still pending. We had no CDP key on the build machine, so we got as far as the 402 and the facilitator's verify step. Everything is TESTNET, the escrow is simulated, and every screen says so."
 
-**Figma judge.** Open `~/calhacks-13/figma/pill-deck.pdf` (21 slides) and the Figma link if it's in Devpost. The honest answer: "We generated the deck from our repo as one JSON file and wrote a Figma plugin to draw it. We tested the plugin against a stub of the Figma API, not inside real Figma." Then say which way the shared Figma file was made, the plugin or the PPTX import. Check before 10:30; it's `[FILL 4]` in Devpost.
+**Figma judge.** Open the Figma Slides deck https://www.figma.com/deck/xSmcPKdRTVgKI7XzGoqQ0R/pill-deck (21 slides, presenter notes; press ▶ to present) or `~/calhacks-13/figma/pill-deck.pdf`. The honest answer: "We generated the deck from our repo as one JSON file and wrote a Figma plugin to draw it. We tested the plugin against a stub of the Figma API, not inside real Figma, so the shared deck came in through the PowerPoint import." Then `figma/STAGE-LOG.md`: four stages, tools, minutes from git, a 1 to 5 rating, what broke.
 
 ## 5. When something goes wrong
 

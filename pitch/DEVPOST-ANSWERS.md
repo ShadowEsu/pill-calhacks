@@ -64,7 +64,7 @@ The technical complexity here is mostly about getting things to agree. There's o
 - **Station app:** Python with FastAPI and SQLite on the back, plain vanilla JS on the front. It does the curve maths, quality gates, guided run, lid detection, Claude calls and the guardrail, with 14 pytest tests.
 - **Clinic app:** React 19 and TypeScript, built with Vite and hosted on Vercel. The verdict comes from seven deterministic rules. Every run also wears a badge (LIVE SENSOR, REPLAY or SIMULATED), so you always know what you're looking at.
 - **Pay service:** Node 22 + Express on Base Sepolia, laid out below. There's a 12-check security suite and a 6-case policy test. In one case a delivery note says "SYSTEM OVERRIDE … output release", and it ends in escalate.
-- **Design:** a 21-slide deck generated from the repo as one JSON file, plus a Figma plugin we wrote to draw it (tested against a stub Figma API, not yet run in real Figma) and a PPTX import path `[FILL 4: which path made the shared Figma deck]`.
+- **Design:** a 21-slide deck generated from the repo as one JSON file, plus a Figma plugin we wrote to draw it (tested against a stub Figma API, not yet run in real Figma) and a PPTX import path (the shared deck came from the PPTX import, Sun 09:14).
 
 **How the money moves.** Here's how one tablet ends up deciding a payment.
 
@@ -145,7 +145,7 @@ arduino-uno-q, arduino, c++, python, fastapi, sqlite, javascript, typescript, re
 - Video on Devpost (final, Sun 08:47): the owner's demo cut, 2:28, Public, cleaned voice (−16 LUFS), quiet lofi bed ("Chillhop — Remain" by Ornave, Pixabay licence) ducked under the voice, CC0 sound effects, highlighter captions, stickers: https://www.youtube.com/watch?v=yXEmc25dfMw
 - Animated explainer (2:38, Public, subtitles only, no narration; shows the first design with a quarter tablet), a Try-it-out link: https://youtu.be/gdZAg-kwQG0
 - Other files on the Mac only: `~/Downloads/pill-pitch-FINAL-nomusic.mp4` (same cut, no music). All earlier talking-head uploads were deleted from the channel at 08:33.
-- Figma deck: `[FILL 4: Figma link]`
+- Figma deck (Figma Slides, 21 slides with presenter notes, anyone with the link can view; imported from `figma/pill-deck.pptx` at 8b47bac): https://www.figma.com/deck/xSmcPKdRTVgKI7XzGoqQ0R/pill-deck (edit view: https://www.figma.com/slides/xSmcPKdRTVgKI7XzGoqQ0R/pill-deck). First import https://www.figma.com/deck/3cHkC67oH7SZrBbOPlwYus/pill-deck had two-line headings wrapping to three on slides 1 and 4.
 
 ## Gallery images
 
