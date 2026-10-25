@@ -6,11 +6,8 @@ If you are reading this after a shutdown: everything below is pushed to **https:
 - Website **https://pillmeifyoucan.health** (+ www) → Vercel project `pill-site`, deploy `dpl_DAthQmhcfCnVMNHi9RPNWW1xPqvJ` (02:51: #film, night fixes, domain links, robots/sitemap).
 - Clinic app **https://app.pillmeifyoucan.health** → Vercel project `pill-app`, deploy `dpl_3CL4hiAswvAKtGgarsmCehh6mNgU` (02:52: nosniff/Referrer-Policy headers, links to the new domain).
 - DNS at Porkbun (Preston's account): `A @ 76.76.21.21`, `CNAME www cname.vercel-dns.com`, `CNAME app cname.vercel-dns.com`. Done, verified 200 over https.
-- YouTube, channel "Pill" (@pillmeifyoucan, Preston's Google account):
-  - Pitch video 2:28, PUBLIC (v11: interactive cut, highlighter karaoke, voice −16 LUFS): https://www.youtube.com/watch?v=kcLrK56m5Oc (earlier public cuts: yhxpyjmUJL0 2:25, BZCJtnYEurU 1:27; the loud clBqG3o4MbA is private)
-  - Animated explainer 2:38, PUBLIC, subtitles only (the narrated cTQpc1VoN00 is private): https://youtu.be/gdZAg-kwQG0
-  - Clinic app walkthrough 62 s, Unlisted: https://youtu.be/h8rAvjgKoxo
-- Devpost draft "Pill" (Cal Hacks 13.0): the Grok bot "Devpost Hunter" already put the pitch video link and the two site/app links in. Nothing else is in yet.
+- YouTube, channel "Pill" (@pillmeifyoucan, Preston's Google account): ONE video left, the animated explainer 2:38, PUBLIC, subtitles only: https://youtu.be/gdZAg-kwQG0. The owner had every talking-head cut deleted at 08:33 (1:27, 2:25, 2:28 ×2, narrated explainer, 62-s walkthrough). His no-music demo cut is file-only: `~/Downloads/pill-pitch-FINAL-nomusic.mp4` (= `pitch/video/pill-pitch-v12-nomusic.mp4`).
+- Devpost "Pill" (Cal Hacks 13.0): SUBMITTED (team pressed Submit ~07:4x). Grok filled: story (12,258 chars), 15-image gallery (01 thumbnail), 13 prizes, feedback, AI tools, Try-it-out links (site, app, both domains, repo), pill-deck.pdf as the file; video = the explainer.
 - Drive kit (folder "Agent Company - Shipped/HQ/2026-10-25"): DEVPOST-ANSWERS.md (current), DEVPOST-FORM.md, gallery 01–20, pill-deck.pdf. https://drive.google.com/drive/folders/1gXd-B5CU1BKo1GbVIldss1M-IZofhUpK
 - Station app: Show mode is ON by default (every run shows "Aspirin 81 mg · 100 % · Passed the screen"; Settings → Show mode, or `#/settings?show=0`, turns it off). Synced to `~/Downloads/peel` (backend byte-identical to v16).
 
