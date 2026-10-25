@@ -11,4 +11,4 @@
 
 Plan B (no plugin): import `figma/pill-deck.pptx` into Figma Slides and write "Plan B: PPTX import" in the build-time column (SUBMIT.md).
 
-Working code: https://pill-site.vercel.app (site) · app: https://pill-app-delta.vercel.app · repo: https://github.com/ShadowEsu/pill (make it public first)
+Working code: https://pillmeifyoucan.health (site) · app: https://app.pillmeifyoucan.health · repo: https://github.com/ShadowEsu/pill-calhacks (make it public first)
