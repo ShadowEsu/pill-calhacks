@@ -54,107 +54,208 @@ people could have bad intentions
 and put different drugs in here.
 
 13
-00:00:26,709 --> 00:00:29,479
+00:00:26,589 --> 00:00:28,259
+Let me go through the app first.
+
+14
+00:00:29,529 --> 00:00:32,339
+If we check my medical,
+
+15
+00:00:32,709 --> 00:00:35,479
 First we put in the
 prescription of the drug,
 
-14
-00:00:29,509 --> 00:00:31,549
+16
+00:00:35,509 --> 00:00:37,549
 and then we use it,
 
-15
-00:00:31,549 --> 00:00:33,399
+17
+00:00:37,549 --> 00:00:39,399
 as well as what it looks like.
 
-16
-00:00:34,346 --> 00:00:37,726
+18
+00:00:40,669 --> 00:00:42,409
+As we click this,
+
+19
+00:00:42,409 --> 00:00:44,946
+it's going to tell us
+to get the water inside.
+
+20
+00:00:45,296 --> 00:00:48,676
 What we have in this
 beautifully 3D-printed device:
 
-17
-00:00:37,726 --> 00:00:39,726
+21
+00:00:48,676 --> 00:00:50,676
 we're going to put
 some water in there.
 
-18
-00:00:39,726 --> 00:00:43,213
+22
+00:00:50,676 --> 00:00:54,586
 There's going to be a
 marking, just like so.
 
-19
-00:00:43,273 --> 00:00:45,163
-As I click start,
-
-20
-00:00:45,573 --> 00:00:46,966
-I push this medicine in.
-
-21
-00:00:47,096 --> 00:00:49,086
-Alrighty, now that it's ready,
-
-22
-00:00:49,096 --> 00:00:50,833
-we will go through the countdown.
-
 23
-00:00:51,352 --> 00:00:52,992
-As you see in this hardware,
+00:00:54,756 --> 00:00:55,766
+Perfect.
 
 24
-00:00:52,992 --> 00:00:55,962
+00:00:56,936 --> 00:00:58,826
+As I click start,
+
+25
+00:00:59,236 --> 00:01:00,963
+I push this medicine in.
+
+26
+00:01:01,543 --> 00:01:03,433
+First, I'm going to pound it.
+
+27
+00:01:05,243 --> 00:01:06,693
+Pounding it.
+
+28
+00:01:09,583 --> 00:01:11,143
+As that countdown is going,
+
+29
+00:01:11,143 --> 00:01:13,313
+I put the medicine inside,
+
+30
+00:01:14,023 --> 00:01:15,883
+and I mix it with my hand.
+
+31
+00:01:15,883 --> 00:01:17,593
+Excuse the disturbance.
+
+32
+00:01:18,943 --> 00:01:19,873
+Perfect.
+
+33
+00:01:20,809 --> 00:01:22,799
+Alrighty, now that it's ready,
+
+34
+00:01:22,809 --> 00:01:24,619
+we will go through the countdown.
+
+35
+00:01:24,789 --> 00:01:26,169
+This is going to take 60 seconds,
+
+36
+00:01:26,169 --> 00:01:28,009
+and as I walk you
+through the process,
+
+37
+00:01:28,009 --> 00:01:28,946
+this is going to keep going.
+
+38
+00:01:29,316 --> 00:01:30,956
+As you see in this hardware,
+
+39
+00:01:30,956 --> 00:01:33,926
 we use an Arduino UNO Q
 for the main head and CPU.
 
-25
-00:00:56,952 --> 00:01:00,932
+40
+00:01:34,916 --> 00:01:38,896
 It uses red, blue
 and white lights,
 
-26
-00:01:00,932 --> 00:01:03,049
+41
+00:01:38,896 --> 00:01:41,163
 as well as a
 photoresistor at the back.
 
-27
-00:01:03,329 --> 00:01:06,959
-We use these three colours
+42
+00:01:41,743 --> 00:01:45,543
+Since this is black and
+there are no lights inside,
+
+43
+00:01:45,543 --> 00:01:49,173
+we use these three colours
 to find a good measurement.
 
-28
-00:01:07,982 --> 00:01:09,792
+44
+00:01:50,486 --> 00:01:52,186
+As we use the water
+
+45
+00:01:52,186 --> 00:01:54,136
+and it does the
+10-second countdown,
+
+46
+00:01:54,186 --> 00:01:56,786
+it goes through what
+is inside the water
+
+47
+00:01:56,786 --> 00:01:59,876
+and sees it as stable, variable.
+
+48
+00:01:59,906 --> 00:02:00,946
+And using these lights,
+
+49
+00:02:00,946 --> 00:02:02,706
+we can find a true concentration
+
+50
+00:02:02,706 --> 00:02:04,346
+of what is in the prescription
+
+51
+00:02:04,346 --> 00:02:05,779
+and what is in the clouds.
+
+52
+00:02:05,979 --> 00:02:07,789
 As the timer runs out,
 
-29
-00:01:10,662 --> 00:01:11,612
+53
+00:02:08,659 --> 00:02:09,609
 it's going to check.
 
-30
-00:01:11,982 --> 00:01:14,222
+54
+00:02:09,979 --> 00:02:12,219
 And oh no: it's unable to verify.
 
-31
-00:01:14,222 --> 00:01:15,202
+55
+00:02:12,219 --> 00:02:13,199
 Because guess what,
 
-32
-00:01:15,202 --> 00:01:17,652
+56
+00:02:13,199 --> 00:02:15,649
 I put morphine in here
 instead of aspirin.
 
-33
-00:01:17,922 --> 00:01:19,052
+57
+00:02:15,919 --> 00:02:17,049
 So watch out.
 
-34
-00:01:20,642 --> 00:01:22,012
+58
+00:02:18,639 --> 00:02:20,009
 Please swallow the right pills.
 
-35
-00:01:22,022 --> 00:01:22,922
+59
+00:02:20,019 --> 00:02:20,919
 Thank you.
 
-36
-00:01:23,532 --> 00:01:26,632
-pill-site.vercel.app
+60
+00:02:21,529 --> 00:02:24,629
+pillmeifyoucan.health
 

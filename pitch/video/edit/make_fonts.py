@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Cuts static Inter instances out of fonts/Inter-Variable.ttf (libass renders a variable font at its default instance).
     .venv/bin/python make_fonts.py      (needs fonttools)
-Writes fonts/Inter-Medium.ttf (family "Inter Medium", wght 500) and fonts/Inter-SemiBold.ttf (family "Inter SemiBold", wght 600).
+Writes fonts/Inter-Medium.ttf (family "Inter Medium", wght 500), fonts/Inter-SemiBold.ttf (family "Inter SemiBold", wght 600)
+and fonts/Inter-Bold.ttf (family "Inter Bold", wght 700; the captions).
 """
 import os
 from fontTools.ttLib import TTFont
@@ -9,7 +10,7 @@ from fontTools.varLib.instancer import instantiateVariableFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "fonts", "Inter-Variable.ttf")
-for family, wght in (("Inter Medium", 500), ("Inter SemiBold", 600)):
+for family, wght in (("Inter Medium", 500), ("Inter SemiBold", 600), ("Inter Bold", 700)):
     f = TTFont(SRC)
     axes = {a.axisTag: a.defaultValue for a in f["fvar"].axes}
     axes.update({"wght": wght, "opsz": 14 if "opsz" in axes else None})

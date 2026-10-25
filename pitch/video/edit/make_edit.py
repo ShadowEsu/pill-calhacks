@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Pill pitch cut, v3: generates captions.ass, captions.srt, graph.txt and build.sh from one cut list.
+"""Pill pitch cut, v7-long: generates captions.ass, captions.srt, graph.txt and build.sh from one cut list.
 
     python3 pitch/video/edit/make_edit.py        (no rendering; build.sh renders)
 
 Timing comes from whisper word onsets (asr/audio16k.json: `whisper small.en --word_timestamps True` on the raw audio).
 Every caption phrase starts on the onset of its first word, and every card starts on the onset of its cue word;
 the wording comes from the Gemini transcript where whisper mishears (TRANSCRIPT.md).
-Look: white Inter Medium sentence captions over a soft bottom scrim; lower-third text cards (2-px purple rule +
-tracked caps label); no stickers, no per-word pops. The end card is v2's, unchanged.
+Look: big yellow Inter Bold captions (84, black 4-px outline, ≤ 2 lines per cue) over a soft bottom scrim; lower-third
+text cards (2-px purple rule + tracked caps label); no stickers, no per-word pops. End card: v2's layout, v7 links.
 """
 import json, os, re
 
@@ -53,26 +53,44 @@ CUTS = [
     dict(id="C4", name="Problem: the last step can fail", src=(27.65, 35.60), fx="push", join=("cut", CUT_D), seated=True,
          caps=[(27.66, "In the final process,"), (29.44, "some of them could be malfunctioned,"),
                (31.80, "people could have bad intentions and put different drugs in here.")]),
-    dict(id="C5", name="App: the prescription, what the tablet looks like", src=(55.85, 63.40), fx="push", join=("fade", DISS),
-         caps=[(56.08, "First we put in the prescription of the drug,"), (58.88, "and then we use it,"),
-               (60.92, "as well as what it looks like.")]),
-    dict(id="C6", name="Box: 3D-printed station, water to the mark", src=(68.35, 77.60), fx="push", join=("cut", CUT_D),
+    # v7-long: the whole demo, 0:49.85–2:13.85 as five contiguous cuts split where the camera moves (app → cup →
+    # crushing/stirring → countdown → hardware → the station's lights), each split in a pause between sentences.
+    dict(id="C5", name="App: open it, the prescription, what the tablet looks like, water prompt", src=(49.85, 68.35),
+         fx="push", join=("fade", DISS),
+         caps=[(49.96, "Let me go through the app first."), (52.90, "If we check my medical,"),
+               (56.08, "First we put in the prescription of the drug,"), (58.88, "and then we use it,"),
+               (60.92, "as well as what it looks like."), (64.04, "As we click this,"),
+               (65.78, "it's going to tell us to get the water inside.")]),
+    dict(id="C6", name="Box: 3D-printed station, water to the mark, start, tablet in", src=(68.35, 84.40), fx="push",
+         join=("cut", CUT_D),
          caps=[(68.70, "What we have in this beautifully 3D-printed device:"),
-               (72.08, "we're going to put some water in there."), (74.08, "There's going to be a marking, just like so.")]),
-    dict(id="C7", name="Box: start, tablet in", src=(80.28, 84.30), fx="push", join=("cut", CUT_D),
-         caps=[(80.34, "As I click start,"), (82.64, "I push this medicine in.", "I'm")]),
-    dict(id="C8", name="App: the countdown", src=(104.15, 108.05), fx="push", join=("fade", DISS),
-         caps=[(104.28, "Alrighty, now that it's ready,"), (106.28, "we will go through the countdown.")]),
-    dict(id="C9", name="Box: the hardware", src=(112.30, 124.55), fx="push", join=("cut", CUT_D),
+               (72.08, "we're going to put some water in there."), (74.08, "There's going to be a marking, just like so."),
+               (78.16, "Perfect."), (80.34, "As I click start,"), (82.64, "I push this medicine in.", "I'm")]),
+    dict(id="C7", name="Box: crush the tablet, add it, stir by hand", src=(84.40, 103.90), fx="push", join=("cut", CUT_D),
+         caps=[(84.98, "First, I'm going to pound it."), (88.68, "Pounding it."),
+               (93.02, "As that countdown is going,"), (94.58, "I put the medicine inside,", "I'm"),
+               (97.46, "and I mix it with my hand.", "and"), (99.32, "Excuse the disturbance."), (102.38, "Perfect.")]),
+    dict(id="C8", name="App: the countdown", src=(103.90, 112.45), fx="push", join=("cut", CUT_D),
+         caps=[(104.28, "Alrighty, now that it's ready,"), (106.28, "we will go through the countdown."),
+               (108.26, "This is going to take 60 seconds,"), (109.64, "and as I walk you through the process,"),
+               (111.48, "this is going to keep going.")]),
+    dict(id="C9", name="Box: the hardware", src=(112.45, 124.70), fx="push", join=("cut", CUT_D),
          caps=[(112.82, "As you see in this hardware,"), (114.46, "we use an Arduino UNO Q for the main head and CPU.", "we're"),
                (118.42, "It uses red, blue and white lights,"),
                (122.40, "as well as a photoresistor at the back.")]),
-    dict(id="C10", name="Box: three colours, one measurement", src=(128.80, 133.80), fx="push", join=("cut", CUT_D),
-         caps=[(129.08, "We use these three colours to find a good measurement.", "we're")]),
+    dict(id="C10", name="Box: dark chamber, three colours, one measurement", src=(124.70, 133.85), fx="push",
+         join=("cut", CUT_D),
+         caps=[(125.28, "Since this is black and there are no lights inside,"),
+               (129.08, "we use these three colours to find a good measurement.", "we're")]),
+    dict(id="C11", name="App + box: the reading", src=(147.40, 163.40), fx="push", join=("fade", DISS),
+         caps=[(147.84, "As we use the water"), (149.54, "and it does the 10-second countdown,", "and"),
+               (151.54, "it goes through what is inside the water", "it"), (154.14, "and sees it as stable, variable.", "and"),
+               (157.26, "And using these lights,"), (158.30, "we can find a true concentration"),
+               (160.06, "of what is in the prescription"), (161.70, "and what is in the clouds.")]),
     # the ending as ONE continuous take (owner, 01:5x: "get the entire ending part … it explains why it's unable to
     # verify"): timer → check → unable to verify → the reveal → watch out → thank you, natural pauses kept, no cuts.
     # The camera is on the laptop first and on him from "because" on, so captions sit high from there (high_from).
-    dict(id="C11", name="Ending, one take: Unable to verify → the reveal → thank you", src=(163.90, 179.20), fx="push",
+    dict(id="C12", name="Ending, one take: Unable to verify → the reveal → thank you", src=(163.90, 179.20), fx="push",
          join=("fade", DISS), high_from=170.30,
          caps=[(164.10, "As the timer runs out,"), (166.78, "it's going to check."),
                (168.10, "And oh no: it's unable to verify."),
@@ -84,8 +102,10 @@ PUSH = 0.04        # slow push-in over each cut (≤ 6 %)
 HOOK_PUSH = 0.06   # the hardware shot
 MUSIC_GAIN = 0.24  # v2's 0.34 minus 3 dB; ducked under the voice
 WHOOSH_GAIN = 0.12 # one soft whoosh per card entry
-CAP_MV = 300       # caption block bottom at y=1620
-CAP_MV_HIGH = 800  # seated cuts (laptop screen in the lower third): bottom at y=1120, over his shirt, above the cards
+CAP_SIZE = 84     # v7: big yellow Inter Bold, black 4-px outline (owner: "bigger and better, highlighted yellow")
+CAP_ML = 60
+CAP_MV = 300      # caption block bottom at y=1620 (2 lines reach up to ~y=1416, under the y=1250 card's panel)
+CAP_MV_HIGH = 800 # seated cuts (laptop screen in the lower third): bottom at y=1120, over his shirt, above the cards
 
 # ── timeline ──────────────────────────────────────────────────────────────────────────────────────
 for c in CUTS:
@@ -117,7 +137,7 @@ for c in CUTS:
                 print(f"WARN {c['id']}: '{w['word'].strip()}' ({w['start']:.2f}–{w['end']:.2f}) straddles {edge}")
 
 # ── caption phrases on real onsets ────────────────────────────────────────────────────────────────
-PHRASES, PHRASE_HIGH = [], []  # (out start, out end, text); caption sits high (seated cut)
+PHRASES, PHRASE_HIGH, PHRASE_CUT = [], [], []  # (out start, out end, text); caption sits high (seated cut); cut index
 for i, c in enumerate(CUTS):
     caps = [(e[0], e[1], e[2] if len(e) > 2 else e[1].split()[0]) for e in c["caps"]]  # (approx, text, anchor word)
     srcs = [onset(anchor, approx) for approx, _, anchor in caps]
@@ -130,6 +150,7 @@ for i, c in enumerate(CUTS):
         b = max(b, min(a + 0.9, to_out(c["id"], nxt), hold))
         PHRASES.append((a, b, text))
         PHRASE_HIGH.append(bool(c.get("seated")) or ("high_from" in c and s0 >= c["high_from"]))
+        PHRASE_CUT.append(i)
 
 # ── cards (lower-third: 2-px purple rule + tracked caps label), all on cue-word onsets ─────────────
 # card(cut, approx src, cue word, label, until=(cut, src) | None → until the next card in the slot)
@@ -137,11 +158,13 @@ def at(cid, approx, word): return to_out(cid, onset(word, approx))
 CARDS = [
     (at("C6", 70.22, "3D"), "THE STATION · 3D-PRINTED CHAMBER"),
     (at("C6", 73.24, "water"), "03 · WATER TO THE MARK"),
-    (at("C7", 83.30, "push"), "04 · ADD THE TABLET"),
+    (at("C6", 83.30, "push"), "04 · ADD THE TABLET"),
+    (at("C7", 85.72, "pound"), "CRUSH IT · STIR IT IN"),
     (at("C8", 107.40, "countdown"), "05 · DISSOLVE AND MEASURE"),
     (at("C9", 115.04, "Arduino"), "ARDUINO UNO Q · MAIN BOARD"),
     (at("C9", 119.04, "red"), "RED · BLUE · WHITE LIGHT + PHOTORESISTOR"),
     (at("C10", 129.84, "three"), "THREE COLOURS · ONE MEASUREMENT"),
+    (at("C11", 149.14, "water"), "THE READING · LIGHT THROUGH THE WATER"),
 ]
 CARDS_C5 = [(at("C5", 57.04, "prescription"), "01 · ENTER THE PRESCRIPTION"),
             (at("C5", 61.94, "looks"), "02 · WHAT THE TABLET LOOKS LIKE")]
@@ -156,12 +179,12 @@ LIST = [(at("C2", 12.88, "FDA"), "01 · FDA REVIEW"),
         (at("C4", 28.66, "final"), "04 · THE LAST STEP CAN FAIL")]
 LIST_END = cut_end(3)
 # the three answers, a restrained list with one swatch each: shown on "check", "Unable to verify" lifts on "unable"
-ANS_HEAD = (at("C11", 167.10, "check"), "06 · THE ANSWER")
+ANS_HEAD = (at("C12", 167.10, "check"), "06 · THE ANSWER")
 ANSWERS = [("Passed the screen", "&H00559E2E&"), ("Needs lab testing", "&H00048ED9&"), ("Unable to verify", "&H008A8A8A&")]
-ANS_LIFT = at("C11", 169.30, "unable")
-ANS_END = at("C11", 170.34, "because")  # the answers give way to the reveal card on "because"
-REVEAL = at("C11", 170.34, "because")
-REVEAL_END = at("C11", 174.04, "So") + 0.45  # held into "So watch out"
+ANS_LIFT = at("C12", 169.30, "unable")
+ANS_END = at("C12", 170.34, "because")  # the answers give way to the reveal card on "because"
+REVEAL = at("C12", 170.34, "because")
+REVEAL_END = at("C12", 174.04, "So") + 0.45  # held into "So watch out"
 REVEAL_TXT = ("THE REVEAL", "A different tablet in the Aspirin 81 bottle", "no match, no pass: Unable to verify")
 HOOK_TITLE = at("C1", 45.58, "pill")
 
@@ -193,20 +216,63 @@ def soft(layer, a, b, style, tags, text, ml=0, mr=0, mv=0, dx=0, dy=3):
         dlg(layer, a, b, style, sh + rf"\1c{BLACK}\1a&H60&\blur4", text)
     dlg(layer + 1, a, b, style, tags, text, ml, mr, mv)
 
-# captions: sentence/phrase level, no fade-in (visible on the onset frame), 80-ms fade-out. On the seated cuts the
-# laptop screen fills the lower third, so their captions sit higher, over his dark shirt, just above the card stack.
-for (a, b, text), high in zip(PHRASES, PHRASE_HIGH):
-    soft(4, a, b, "Cap", r"\fad(0,80)", wrap2(text), ml=90, mr=90, mv=CAP_MV_HIGH if high else CAP_MV)
+EM = {" ": 0.26, "·": 0.32, ",": 0.32, "+": 0.67, "-": 0.40, ".": 0.30, ":": 0.30}
+def textw(s, size, spacing=0):
+    """Estimated advance width (Inter averages: caps 0.69 em, lowercase 0.55 em, digits 0.61 em)."""
+    return sum((EM.get(ch) or (0.69 if ch.isupper() else 0.61 if ch.isdigit() else 0.55)) * size + spacing for ch in s)
+# captions: yellow bold, at most 2 lines per cue: a long phrase is split into 2-line chunks, each chunk starting on its
+# first word's whisper onset (proportional time if whisper has no such word). No fade-in, 80-ms fade-out. On the seated
+# cuts the laptop screen fills the lower third, so their captions sit higher, over his dark shirt, above the card stack.
+CAP_LINE_W = W - 2 * CAP_ML - 40
+def cap_w(s): return textw(s, CAP_SIZE) * 0.74  # measured: libass draws Inter Bold at 84 ≈ 0.70 × the textw estimate
+def fit_lines(ws):  # greedy line fill; number of lines `ws` needs
+    n, cur = 1, []
+    for w in ws:
+        if cur and cap_w(" ".join(cur + [w])) > CAP_LINE_W:
+            n += 1; cur = []
+        cur.append(w)
+    return n
+def cap_chunks(text):
+    """Split a phrase into the fewest cues of ≤ 2 lines, balanced by width (no one-word orphan cue)."""
+    ws = text.split()
+    n = 1
+    while True:
+        total = cap_w(text); groups, cur = [], []
+        for w in ws:
+            if cur and len(groups) < n - 1 and cap_w(" ".join(sum(groups, []) + cur + [w])) > total * (len(groups) + 1) / n:
+                groups.append(cur); cur = []
+            cur.append(w)
+        groups.append(cur)
+        if all(fit_lines(g) <= 2 for g in groups):
+            break
+        n += 1
+    out = []
+    for g in groups:  # balance the two lines of each cue
+        t = " ".join(g)
+        if cap_w(t) <= CAP_LINE_W or len(g) < 2:
+            out.append((g, t)); continue
+        m = min(range(1, len(g)), key=lambda m: max(cap_w(" ".join(g[:m])), cap_w(" ".join(g[m:]))))
+        out.append((g, " ".join(g[:m]) + r"\N" + " ".join(g[m:])))
+    return out
+for (a, b, text), high, ci in zip(PHRASES, PHRASE_HIGH, PHRASE_CUT):
+    c, chunks = CUTS[ci], cap_chunks(text)
+    starts_, pos = [a], len(" ".join(chunks[0][0])) + 1
+    for ws, _ in chunks[1:]:
+        guess = a + (b - a) * pos / len(text)
+        src = c["src"][0] + guess - c["out"]
+        cand = [w for w in WORDS if norm(w["word"]) == norm(ws[0]) and abs(w["start"] - src) <= 0.8]
+        t0 = to_out(c["id"], min(cand, key=lambda w: abs(w["start"] - src))["start"]) if cand else guess
+        starts_.append(min(max(t0, starts_[-1] + 0.5), b - 0.4))
+        pos += len(" ".join(ws)) + 1
+    for k, (_, t) in enumerate(chunks):
+        dlg(5, starts_[k], starts_[k + 1] if k + 1 < len(chunks) else b, "Cap", r"\fad(0,80)", t,
+            CAP_ML, CAP_ML, CAP_MV_HIGH if high else CAP_MV)
 # hook title: clean serif, no halo; fades up and rises 24 px over 300 ms on the word "Pill"
 soft(4, HOOK_TITLE, CUTS[0]["dur"] - 0.05, "Hook", r"\an5\move(540,524,540,500,0,300)\fad(300,200)", "Pill", dy=4)
 RULE = r"{\p1}m 0 0 l 96 0 96 2 0 2{\p0}"
 X0 = 80
 PAD = 24
 PANEL_A = "&H6B&"  # black at 58 % opacity
-EM = {" ": 0.26, "·": 0.32, ",": 0.32, "+": 0.67, "-": 0.40, ".": 0.30, ":": 0.30}
-def textw(s, size, spacing=0):
-    """Estimated advance width (Inter averages: caps 0.69 em, lowercase 0.55 em, digits 0.61 em)."""
-    return sum((EM.get(ch) or (0.69 if ch.isupper() else 0.61 if ch.isdigit() else 0.55)) * size + spacing for ch in s)
 def rrect(w, h, r=12):
     k = r * 0.552
     return (rf"{{\p1}}m {r} 0 l {w - r} 0 b {w - r + k:.1f} 0 {w} {r - k:.1f} {w} {r} l {w} {h - r} "
@@ -222,11 +288,12 @@ def card(a, b, y, label, style="Label", rule=True, with_panel=True):
     if rule:
         dlg(3, a, b, "Rule", rf"\an7\move({X0 - 40},{y},{X0},{y},0,200)\fad(200,160)\1c{PURPLE}", RULE)
     soft(4, a, b, style, rf"\an7\move({X0 - 24},{y + 14},{X0},{y + 14},0,200)\fad(200,160)", label, dy=2)
-# single-slot cards at the lower third (above the caption block)
+# single-slot cards at the lower third (above the caption block); a card holds at most CARD_MAX s on the long cuts
+CARD_MAX = 5.0
 for k, (a, label) in enumerate(CARDS):
     stop = min(x for x in CARD_STOPS["default"] if x > a + 0.3)
-    b = min(stop, CARDS[k + 1][0]) if k + 1 < len(CARDS) else stop
-    card(a, b, 1300, label)
+    b = min(stop, CARDS[k + 1][0], a + CARD_MAX) if k + 1 < len(CARDS) else min(stop, a + CARD_MAX)
+    card(a, b, 1250, label)
 # the problem list
 # the problem list: one panel that grows a row at a time (fixed width so it doesn't jitter)
 card(LIST_HEAD[0], LIST_END, 1150, LIST_HEAD[1], style="ListHead", with_panel=False)
@@ -251,9 +318,9 @@ card(REVEAL, REVEAL_END, 1150, REVEAL_TXT[0], with_panel=False)
 panel(REVEAL, REVEAL_END, 1150 - PAD, max(textw(REVEAL_TXT[1], 36), textw(REVEAL_TXT[2], 28)), (1258 + 34) - 1150 + 2 * PAD)
 soft(4, REVEAL, REVEAL_END, "Reveal", rf"\an7\move({X0 - 24},{1208},{X0},{1208},0,200)\fad(200,160)", REVEAL_TXT[1], dy=2)
 soft(4, REVEAL, REVEAL_END, "RevealSub", rf"\an7\move({X0 - 24},{1258},{X0},{1258},0,200)\fad(200,160)", REVEAL_TXT[2], dy=2)
-# end card text (v2, unchanged)
+# end card text (v2 layout; v7 links: the domain + the hackathon repo)
 for (dy_, txt, st, d0) in ((880, "The box measures. Pill explains.", "CardSerif", 0.4),
-                           (1500, "pill-site.vercel.app", "Card", 1.2), (1590, "github.com/ShadowEsu/pill", "Card", 1.4)):
+                           (1500, "pillmeifyoucan.health", "Card", 1.2), (1590, "github.com/ShadowEsu/pill-calhacks", "Card", 1.4)):
     dlg(1, END_START + d0, TOTAL, st, rf"\an5\pos(540,{dy_})\fad(150,0)\fscx90\fscy90\t(0,160,\fscx100\fscy100)", txt)
 
 ASS = f"""[Script Info]
@@ -267,7 +334,7 @@ YCbCr Matrix: TV.709
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,Inter Medium,48,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,2,90,90,300,1
+Style: Cap,Inter Bold,{CAP_SIZE},&H0000E5FF,&H0000E5FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,2,{CAP_ML},{CAP_ML},{CAP_MV},1
 Style: Hook,Instrument Serif,200,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,5,40,40,0,1
 Style: Label,Inter SemiBold,30,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,4,0,1,0,0,7,0,0,0,1
 Style: ListHead,Inter SemiBold,24,&H33FFFFFF,&H33FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,6,0,1,0,0,7,0,0,0,1
@@ -349,7 +416,9 @@ for j, (name, x, y, h, st, dur) in enumerate(END_POPS):
               f"eval=frame:enable='between(t,{T0},{T0 + dur:.3f})':eof_action=pass[o{j}]")
     vcur = f"[o{j}]"
 fc.append(f"{vcur}ass=captions.ass:fontsdir=fonts,format=yuv420p[vout]")
-# audio: voice ladder + v2's score, 3 dB lower and ducked under the voice + a soft whoosh on each card entry; -16 LUFS
+# audio: voice ladder + v2's score, 3 dB lower and ducked under the voice + a soft whoosh on each card entry;
+# -23 LUFS integrated, true peak ≤ -3 dBTP in the MP4 (owner: v5 at -16 LUFS was too loud). loudnorm aims at -4 dBTP
+# because the AAC encode adds inter-sample peak (TP=-3 here measured -2.8 dBTP in the MP4).
 whooshes = sorted({round(a, 3) for a, _ in CARDS} | {round(LIST_HEAD[0], 3), round(a0, 3), round(REVEAL, 3)})
 iWH = iHW + 1 + len(END_POPS)
 fc.append(f"{pa}asplit=2[vo][vsc]")
@@ -362,21 +431,21 @@ for m, t0 in enumerate(whooshes):
     ms = int(round(max(0.0, t0 - 0.12) * 1000))  # the whoosh swells into the card's arrival
     fc.append(f"[w{m}]adelay={ms}|{ms}[wd{m}]")
 fc.append("".join(f"[wd{m}]" for m in range(len(whooshes))) + f"amix=inputs={len(whooshes)}:normalize=0:duration=longest[sfx]")
-fc.append("[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[aout]")
+fc.append("[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-23:TP=-4:LRA=11,aresample=48000[aout]")
 
 graph = ";\n".join(fc)
 open(os.path.join(HERE, "graph.txt"), "w").write(graph + "\n")
 ins = " \\\n  ".join(inputs + pop_inputs + ["-i sfx/whoosh.wav"])
 BUILD = f"""#!/usr/bin/env bash
-# Pill pitch cut v3: {NC} cuts + {END_DUR:.0f}-s end card = {TOTAL:.2f} s, 1080x1920 (source is portrait: 1024x576 with -90° rotation).
+# Pill pitch cut v7-long: {NC} cuts + {END_DUR:.0f}-s end card = {TOTAL:.2f} s, 1080x1920 (source is portrait: 1024x576 with -90° rotation).
 # Generated by make_edit.py (edit the cut list there, re-run it, never hand-edit the graph).
-#   bash pitch/video/edit/build.sh            full render  -> pitch/video/pill-pitch-v5.mp4 (+ identical pill-pitch-90s.mp4)
+#   bash pitch/video/edit/build.sh            full render  -> pitch/video/pill-pitch-v7-long.mp4
 #   bash pitch/video/edit/build.sh --preview  seconds 0-10 -> pitch/video/pill-pitch-preview10.mp4
 #   bash pitch/video/edit/build.sh --check    filtergraph dry run: 0.1 s to the null muxer, no encode
 set -euo pipefail
 cd "$(dirname "$0")"
 SRC=../../video-raw/preston-pitch-raw.mp4
-MUSIC=${{MUSIC:-work/music-fun.wav}}   # original score synthesised by make_music.py (116 BPM), no licence needed
+MUSIC=${{MUSIC:-work/music-long.wav}}   # original score synthesised by make_music.py (116 BPM), no licence needed
 FF=${{FFMPEG:-bin/ffmpeg}}          # needs libass (the 'ass' filter); Homebrew's ffmpeg 8.1.2 has none
 if ! "$FF" -hide_banner -filters 2>/dev/null | grep ' ass ' >/dev/null; then
   echo "fetching a static ffmpeg with libass into bin/ (martin-riedl.de, macOS arm64)"
@@ -384,20 +453,19 @@ if ! "$FF" -hide_banner -filters 2>/dev/null | grep ' ass ' >/dev/null; then
   (cd bin && unzip -o -q ffmpeg.zip && rm ffmpeg.zip && chmod +x ffmpeg && xattr -c ffmpeg 2>/dev/null || true)
   FF=bin/ffmpeg
 fi
-[ -f "$MUSIC" ] && [ -f sfx/whoosh.wav ] || {{ echo "missing $MUSIC or sfx/whoosh.wav: run .venv/bin/python make_music.py 90"; exit 1; }}
-[ -f fonts/Inter-Medium.ttf ] && [ -f fonts/Inter-SemiBold.ttf ] || {{ echo "missing static Inter: run .venv/bin/python make_fonts.py"; exit 1; }}
+[ -f "$MUSIC" ] && [ -f sfx/whoosh.wav ] || {{ echo "missing $MUSIC or sfx/whoosh.wav: run .venv/bin/python make_music.py {int(TOTAL) + 5} && mv work/music-fun.wav $MUSIC"; exit 1; }}
+[ -f fonts/Inter-Medium.ttf ] && [ -f fonts/Inter-SemiBold.ttf ] && [ -f fonts/Inter-Bold.ttf ] || {{ echo "missing static Inter: run .venv/bin/python make_fonts.py"; exit 1; }}
 MODE=${{1:-full}}
 case "$MODE" in
   --preview) OUTARGS=(-t 10 -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -c:a aac -b:a 160k -movflags +faststart ../pill-pitch-preview10.mp4) ;;
   --check)   OUTARGS=(-t 0.1 -f null -) ;;
-  full)      OUTARGS=(-c:v libx264 -preset medium -crf 20 -profile:v high -pix_fmt yuv420p -r {FPS} -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../pill-pitch-v5.mp4) ;;
+  full)      OUTARGS=(-c:v libx264 -preset medium -crf 20 -profile:v high -pix_fmt yuv420p -r {FPS} -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../pill-pitch-v7-long.mp4) ;;
   *) echo "usage: build.sh [--preview|--check]"; exit 2 ;;
 esac
 "$FF" -hide_banner -y -nostdin \\
   {ins} \\
   -/filter_complex graph.txt \\
   -map "[vout]" -map "[aout]" "${{OUTARGS[@]}}"
-[ "$MODE" = full ] && cp -f ../pill-pitch-v5.mp4 ../pill-pitch-90s.mp4  # same bytes under the old name
 [ "$MODE" = --check ] || ls -la ../pill-pitch-*.mp4
 """
 open(os.path.join(HERE, "build.sh"), "w").write(BUILD)
@@ -407,7 +475,7 @@ os.chmod(os.path.join(HERE, "build.sh"), 0o755)
 def srt_t(x):
     ms = int(round(x * 1000)); return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
 with open(os.path.join(HERE, "captions.srt"), "w") as f:
-    for k, (a, b, text) in enumerate(PHRASES + [(END_START + 0.9, TOTAL, "pill-site.vercel.app")], 1):
+    for k, (a, b, text) in enumerate(PHRASES + [(END_START + 0.9, TOTAL, "pillmeifyoucan.health")], 1):
         f.write(f"{k}\n{srt_t(a)} --> {srt_t(b)}\n{wrap2(text).replace(chr(92) + 'N', chr(10))}\n\n")
 
 # ── table for EDIT-PLAN.md ─────────────────────────────────────────────────────────────────────────
@@ -418,7 +486,7 @@ for c in CUTS:
     j = "—" if not c["join"] else ("cut" if c["join"][0] == "cut" else f'dissolve {round(c["join"][1] * FPS)} fr')
     print(f'| {c["id"]} {c["name"]} | {mmss(c["out"])}–{mmss(c["out"] + c["dur"])} | {mmss(c["src"][0])}–{mmss(c["src"][1])} | '
           f'{c["dur"]:.2f} | {j} | ' + " / ".join(e[1] for e in c["caps"]) + " |")
-print(f"| END card | {mmss(END_START)}–{mmss(TOTAL)} | generated | {END_DUR:.2f} | dip to black {END_JOIN[1]:.2f}s | The box measures. Pill explains. / pill-site.vercel.app / github.com/ShadowEsu/pill |")
+print(f"| END card | {mmss(END_START)}–{mmss(TOTAL)} | generated | {END_DUR:.2f} | dip to black {END_JOIN[1]:.2f}s | The box measures. Pill explains. / pillmeifyoucan.health / github.com/ShadowEsu/pill-calhacks |")
 print(f"TOTAL {TOTAL:.2f}s; {len(PHRASES)} caption phrases; {len(ev)} ASS events")
 print("CARDS:", [(round(a, 2), l) for a, l in CARDS])
 print("LIST:", [(round(a, 2), l) for a, l in LIST], "ANSWERS at", round(a0, 2), "lift", round(ANS_LIFT, 2), "TITLE", round(HOOK_TITLE, 2))
