@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pill pitch cut, v7-long: generates captions.ass, captions.srt, graph.txt and build.sh from one cut list.
+"""Pill pitch cut, v9-playful: generates captions.ass, captions.srt, graph.txt and build.sh from one cut list.
 
     python3 pitch/video/edit/make_edit.py        (no rendering; build.sh renders)
 
@@ -7,7 +7,8 @@ Timing comes from whisper word onsets (asr/audio16k.json: `whisper small.en --wo
 Every caption phrase starts on the onset of its first word, and every card starts on the onset of its cue word;
 the wording comes from the Gemini transcript where whisper mishears (TRANSCRIPT.md).
 Look: Inter Bold 84 karaoke captions (each word sweeps white → yellow as he says it, black 4-px outline, ≤ 2 lines per
-cue) over a soft bottom scrim; lower-third text cards (2-px purple rule + tracked caps label). End card: v2's, v7 links.
+cue) over a soft bottom scrim; lower-third text cards; v9: sprung pop-up stickers, doodles and alpha animations (fx/)
+with soft pops, VideoFX's grade (fx/grade.txt). End card: v2's, v7 links, confetti.
 """
 import json, os, re
 
@@ -104,13 +105,15 @@ MUSIC_LUFS = -38  # v8: a barely-there bed, 22 LU under the voice stem (voice al
 WHOOSH_GAIN = 0.12 # one soft whoosh per card entry
 CAP_SIZE = 84     # Inter Bold, black 4-px outline; v8: karaoke, each word sweeps white → yellow as he says it
 CAP_ML = 60
-CAP_MV = 300      # caption block bottom at y=1620 (2 lines reach up to ~y=1416, under the y=1250 card's panel)
+CAP_MV = 410      # v9 (EDIT-BRIEF safe zone): caption block bottom at y=1510, above the Shorts UI band
 CAP_MV_HIGH = 800 # seated cuts (laptop screen in the lower third): bottom at y=1120, over his shirt, above the cards
 
 # ── timeline ──────────────────────────────────────────────────────────────────────────────────────
 for c in CUTS:
     c["dur"] = round(c["src"][1] - c["src"][0], 3)
-starts, t = [], 0.0
+# v9 opening (owner, 08:03): PRE s of black with "Pill" typing in and the intro card, then a fast fade into C1
+PRE, PRE_JOIN = 3.5, 0.3
+starts, t = [], PRE - PRE_JOIN
 for i, c in enumerate(CUTS):
     if i:
         t -= c["join"][1]
@@ -180,9 +183,6 @@ LIST = [(at("C2", 12.88, "FDA"), "01 · FDA REVIEW"),
 LIST_END = cut_end(3)
 # the three answers, a restrained list with one swatch each: shown on "check", "Unable to verify" lifts on "unable"
 ANS_HEAD = (at("C12", 167.10, "check"), "06 · THE ANSWER")
-ANSWERS = [("Passed the screen", "&H00559E2E&"), ("Needs lab testing", "&H00048ED9&"), ("Unable to verify", "&H008A8A8A&")]
-ANS_LIFT = at("C12", 169.30, "unable")
-ANS_END = at("C12", 170.34, "because")  # the answers give way to the reveal card on "because"
 REVEAL = at("C12", 170.34, "because")
 REVEAL_END = at("C12", 174.04, "So") + 0.45  # held into "So watch out"
 REVEAL_TXT = ("THE REVEAL", "A different tablet in the Aspirin 81 bottle", "no match, no pass: Unable to verify")
@@ -255,7 +255,8 @@ def cap_chunks(text):
         out.append((g, " ".join(g[:m]) + r"\N" + " ".join(g[m:])))
     return out
 def karaoke(t, a, b, c):
-    """Word-by-word highlight: each word sweeps white → yellow (\\kf) over its whisper start–end; words whisper doesn't
+    """Highlighter karaoke (\\ko): each word turns black on a yellow marker box (the BorderStyle-3 box) as he says it;
+    unspoken words are white with no box. Words whisper doesn't
     have verbatim (caption trims like "3D-printed", "UNO Q") get times interpolated between their matched neighbours."""
     toks = [(w, li < len(t.split(r"\N")) - 1 and j == len(ln.split()) - 1)
             for li, ln in enumerate(t.split(r"\N")) for j, w in enumerate(ln.split())]
@@ -288,7 +289,7 @@ def karaoke(t, a, b, c):
             out.append(rf"{{\k{st - cur}}}")
         nxt = round(times[n + 1][0] * 100) - base if n + 1 < len(times) else st + 999
         d = max(5, min(round((w1 - w0) * 100), nxt - st if nxt > st else 5))
-        out.append(rf"{{\kf{d}}}{w}" + (r"\N" if brk else " " if n + 1 < len(toks) else ""))
+        out.append(rf"{{\ko{d}}}{w}" + (r"\N" if brk else " " if n + 1 < len(toks) else ""))
         cur = st + d
     return "".join(out)
 for (a, b, text), high, ci in zip(PHRASES, PHRASE_HIGH, PHRASE_CUT):
@@ -306,7 +307,17 @@ for (a, b, text), high, ci in zip(PHRASES, PHRASE_HIGH, PHRASE_CUT):
         dlg(5, starts_[k], e0, "Cap", r"\fad(0,80)", karaoke(t, starts_[k], e0, c),
             CAP_ML, CAP_ML, CAP_MV_HIGH if high else CAP_MV)
 # hook title: clean serif, no halo; fades up and rises 24 px over 300 ms on the word "Pill"
-soft(4, HOOK_TITLE, CUTS[0]["dur"] - 0.05, "Hook", r"\an5\move(540,524,540,500,0,300)\fad(300,200)", "Pill", dy=4)
+soft(4, HOOK_TITLE, CUTS[0]["out"] + CUTS[0]["dur"] - 0.05, "Hook", r"\an5\move(540,524,540,500,0,300)\fad(300,200)", "Pill", dy=4)
+# pre-roll: "Pill" types in on black, one letter per 4 frames, with a blinking cursor, then gives way to C1
+TYPE0, TYPE_END = 0.35, PRE - PRE_JOIN
+for n in range(1, 5):
+    a_ = TYPE0 + (n - 1) * 4 / FPS
+    b_ = TYPE0 + n * 4 / FPS if n < 4 else TYPE_END
+    dlg(6, a_, b_, "Hook", r"\an4\pos(330,520)\fs260" + (r"\fad(0,250)" if n == 4 else ""), "Pill"[:n])
+cx_ = 330 + round(textw("Pill", 260) * 0.62)  # cursor right after the last letter
+for m in range(6):  # blinking cursor: on 0.27 s, off 0.2 s
+    a_ = TYPE0 + m * 0.47
+    dlg(6, a_, a_ + 0.27, "Hook", rf"\an4\pos({cx_ if m else 330 + 40},{520})\fs230\1c&H0000E5FF&", "|")
 RULE = r"{\p1}m 0 0 l 96 0 96 2 0 2{\p0}"
 X0 = 80
 PAD = 24
@@ -331,7 +342,7 @@ CARD_MAX = 5.0
 for k, (a, label) in enumerate(CARDS):
     stop = min(x for x in CARD_STOPS["default"] if x > a + 0.3)
     b = min(stop, CARDS[k + 1][0], a + CARD_MAX) if k + 1 < len(CARDS) else min(stop, a + CARD_MAX)
-    card(a, b, 1250, label)
+    card(a, b, 1180, label)
 # the problem list
 # the problem list: one panel that grows a row at a time (fixed width so it doesn't jitter)
 card(LIST_HEAD[0], LIST_END, 1150, LIST_HEAD[1], style="ListHead", with_panel=False)
@@ -340,17 +351,8 @@ for k, (a, label) in enumerate(LIST):
     nxt = LIST[k + 1][0] if k + 1 < len(LIST) else LIST_END
     panel(a, nxt, 1150 - PAD, lw, (1196 + 52 * k + 34) - 1150 + 2 * PAD, fin=200 if k == 0 else 0, fout=160 if k == len(LIST) - 1 else 0)
     soft(4, a, LIST_END, "Label", rf"\an7\move({X0 - 24},{1196 + 52 * k},{X0},{1196 + 52 * k},0,200)\fad(200,160)", label, dy=2)
-# the answers
+# the three answers are the answers-bounce animation in v9 (see the overlay layer); a0 keeps their whoosh
 a0 = ANS_HEAD[0]
-card(a0, ANS_END, 1150, ANS_HEAD[1], style="ListHead", with_panel=False)
-panel(a0, ANS_END, 1150 - PAD, 40 + max(textw(t, 40) for t, _ in ANSWERS), (1200 + 62 * 2 + 48) - 1150 + 2 * PAD)
-for k, (txt, col) in enumerate(ANSWERS):
-    y = 1200 + 62 * k
-    last = k == len(ANSWERS) - 1
-    dim = r"\alpha&H70&" + (rf"\t({int((ANS_LIFT - a0) * 1000)},{int((ANS_LIFT - a0) * 1000) + 200},\alpha&H00&)" if last else "")
-    dlg(3, a0, ANS_END, "Rule", rf"\an7\move({X0 - 24},{y + 12},{X0},{y + 12},0,200)\fad(200,160)\1c{col}" + dim,
-        r"{\p1}m 0 0 l 22 0 22 22 0 22{\p0}")
-    soft(4, a0, ANS_END, "Answer", rf"\an7\move({X0 + 16},{y},{X0 + 40},{y},0,200)\fad(200,160)" + dim, txt, dy=2)
 # the reveal: header + line + sub on one panel, same place as the answers list
 card(REVEAL, REVEAL_END, 1150, REVEAL_TXT[0], with_panel=False)
 panel(REVEAL, REVEAL_END, 1150 - PAD, max(textw(REVEAL_TXT[1], 36), textw(REVEAL_TXT[2], 28)), (1258 + 34) - 1150 + 2 * PAD)
@@ -372,7 +374,7 @@ YCbCr Matrix: TV.709
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,Inter Bold,{CAP_SIZE},&H0000E5FF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,2,{CAP_ML},{CAP_ML},{CAP_MV},1
+Style: Cap,Inter Bold,{CAP_SIZE},&H00000000,&H00FFFFFF,&H0000E5FF,&H00000000,0,0,0,0,100,100,0,0,3,10,0,2,{CAP_ML},{CAP_ML},{CAP_MV},1
 Style: Hook,Instrument Serif,200,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,5,40,40,0,1
 Style: Label,Inter SemiBold,30,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,4,0,1,0,0,7,0,0,0,1
 Style: ListHead,Inter SemiBold,24,&H33FFFFFF,&H33FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,6,0,1,0,0,7,0,0,0,1
@@ -395,10 +397,12 @@ for c in CUTS:
 NC = len(CUTS)
 iEND, iSIL, iMUS, iHW = NC, NC + 1, NC + 2, NC + 3
 JC = CUTS[0]["jcut"]
+iPV, iPA = iHW + 1, iHW + 2  # the black pre-roll (video, silence)
 inputs += [f'-f lavfi -t {END_DUR} -i "color=c=0xF4EFE6:s={W}x{H}:r={FPS}"',
            f'-f lavfi -t {END_DUR} -i "anullsrc=r=48000:cl=stereo"', '-i "$MUSIC"',
-           f'-ss {JC["src"]:.3f} -t {(CUTS[0]["dur"] - JC["head"]) * JC["speed"]:.3f} -i "$SRC"']
-GRADE = "eq=contrast=1.04:saturation=1.06:gamma=1.03"
+           f'-ss {JC["src"]:.3f} -t {(CUTS[0]["dur"] - JC["head"]) * JC["speed"]:.3f} -i "$SRC"',
+           f'-f lavfi -t {PRE} -i "color=c=black:s={W}x{H}:r={FPS}"', f'-f lavfi -t {PRE} -i "anullsrc=r=48000:cl=stereo"']
+GRADE = open(os.path.join(HERE, "fx", "grade.txt")).read().strip()  # VideoFX's tested grade, after the scale to 1080x1920
 BASE = f"fps={FPS},scale={W}:{H}:flags=lanczos,setsar=1"
 # Every segment is forced to its exact nominal length (clone-pad the last frame, then trim): the 31.58-fps VFR source
 # otherwise loses a frame here and there, a later xfade offset lands past its input's end and the video stops early.
@@ -421,7 +425,11 @@ fc.append(f"[{iEND}:v]format=yuv420p,setsar=1,{fit(END_DUR)},settb=1/{FPS}[v{NC}
 fc.append(f"[{iSIL}:a]aformat=channel_layouts=stereo,{afit(END_DUR)}[a{NC}]")
 joins = [c["join"] for c in CUTS[1:]] + [END_JOIN]
 segstarts = starts[1:] + [END_START]
-pv, pa = "[v0]", "[a0]"
+fc.append(f"[{iPV}:v]format=yuv420p,setsar=1,{fit(PRE)},settb=1/{FPS}[vpre]")
+fc.append(f"[{iPA}:a]aformat=channel_layouts=stereo,{afit(PRE)}[apre]")
+fc.append(f"[vpre][v0]xfade=transition=fade:duration={PRE_JOIN}:offset={PRE - PRE_JOIN:.3f}[xp]")
+fc.append(f"[apre][a0]acrossfade=d={PRE_JOIN}:c1=tri:c2=tri[yp]")
+pv, pa = "[xp]", "[yp]"
 for k, ((tr, d), off) in enumerate(zip(joins, segstarts), start=1):
     trn = "fade" if tr == "cut" else tr
     nv, na = f"[x{k}]", f"[y{k}]"
@@ -433,52 +441,150 @@ SCRIM_Y, SCRIM_H = 980, H - 980
 fc.append(f"color=c=black:s={W}x{SCRIM_H}:r={FPS}:d=0.04,format=rgba,"
           f"geq=r='0':g='0':b='0':a='185*pow(min(Y/({SCRIM_H}*0.36),1),2)*(3-2*min(Y/({SCRIM_H}*0.36),1))',"
           f"loop=loop=-1:size=1:start=0,trim=duration={END_START:.3f},setpts=N/{FPS}/TB[scrim]")
-fc.append(f"{pv}[scrim]overlay=x=0:y={SCRIM_Y}:eof_action=pass:format=auto[vs]")
+# screen shake on "pound"/"pounding" (owner: "crush/pound → screen shake"): a 3 % crop that jitters for 0.3 s
+SHAKES = [to_out(c["id"], w["start"]) for c in CUTS for w in WORDS
+          if norm(w["word"]) in ("pound", "pounding") and c["src"][0] <= w["start"] < c["src"][1]]
+S = "+".join(f"between(t,{T:.3f},{T + 0.3:.3f})*exp(-(t-{T:.3f})*10)" for T in SHAKES) or "0"
+fc.append(f"{pv}crop=w=1048:h=1862:x='16+16*({S})*sin(t*95)':y='29+22*({S})*cos(t*83)',scale={W}:{H}:flags=bicubic,setsar=1[vsh]")
+fc.append(f"[vsh][scrim]overlay=x=0:y={SCRIM_Y}:eof_action=pass:format=auto[vs]")
 vcur = "[vs]"
-# end card (v2, unchanged): pill glyph + "one tablet · one cup · three answers" line, spring-in
-END_POPS = [("pill", 330, 360, 420, 0.30, 3.7), ("pop-end", None, 1240, 120, 0.90, 3.1)]
-pop_inputs = []
-STK = {"pill": (600, 600, 212, 212), "pop-end": (1270, 194, 0, 0)}
-for j, (name, x, y, h, st, dur) in enumerate(END_POPS):
-    idx = iHW + 1 + j
+# v9 playful layer (owner, 07:57: "bring back … the stickers, and upgrade it"): v2's pop-up stickers on the v7 cut list,
+# VideoFX's doodles (fx/placements.json: centre x/y, t_in seconds into the cut) and PillRain's alpha animations.
+# Every sticker springs in (55 % → 100 % with a damped overshoot and a small drop) and gets a soft pop at -18 dB.
+def png_size(p):
+    with open(p, "rb") as f:
+        head = f.read(24)
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+STK = {"answer-passed": (900, 204, 62, 410), "answer-lab": (900, 204, 62, 410), "answer-unable": (900, 204, 62, 410),
+       "chip-unoq": (700, 204, 162, 410), "chip-402": (1000, 204, 10, 410), "chip-box": (760, 204, 130, 410),
+       "chip-explains": (620, 204, 200, 410), "pill": (600, 600, 212, 212), "ring": (800, 600, 112, 212),
+       "arrow": (500, 500, 262, 262)}
+for f in sorted(os.listdir(os.path.join(HERE, "stickers"))):
+    if f.startswith("pop-") and f.endswith(".png"):
+        STK[f[:-4]] = png_size(os.path.join(HERE, "stickers", f)) + (0, 0)
+SAFE = (48, 120, 930, 1540)  # EDIT-BRIEF: keep overlays out of the Shorts UI (right 150 px, bottom ~380 px)
+OVL = []  # dict(T0, dur, path, crop, wd, x, y, alpha, mov)
+def P(cid, st, name, y, h, x=None, dur=None, to=None, alpha=1.0):
     cw, ch, ox, oy = STK[name]
     wd = round(h * cw / ch / 2) * 2
     x = (W - wd) // 2 if x is None else x
-    T0 = round(END_START + st, 3)
-    hd = wd * ch / cw
-    pop_inputs.append(f'-loop 1 -framerate {FPS} -t {dur:.2f} -i stickers/{name}.png')
-    fc.append(f"[{idx}:v]format=rgba,crop={cw}:{ch}:{ox}:{oy},"
-              f"scale=w='trunc({wd}*(1-0.45*exp(-t*8)*cos(t*22))/2)*2':h=-2:eval=frame:flags=bicubic,"
-              f"fade=t=in:st=0:d=0.10:alpha=1,fade=t=out:st={dur - 0.18:.2f}:d=0.18:alpha=1,setpts=PTS-STARTPTS+{T0}/TB[p{j}]")
-    fc.append(f"{vcur}[p{j}]overlay=x='{x}+({wd}-overlay_w)/2':y='{y}+({hd:.0f}-overlay_h)/2+40*exp(-(t-{T0})*10)*cos((t-{T0})*18)':"
-              f"eval=frame:enable='between(t,{T0},{T0 + dur:.3f})':eof_action=pass[o{j}]")
+    x, y = max(SAFE[0], min(x, SAFE[2] - wd)), max(SAFE[1], min(y, SAFE[3] - h))
+    T0 = to_out(cid, st) if cid != "END" else round(END_START + st, 3)
+    OVL.append(dict(T0=T0, dur=round((to_out(*to) - T0) if to else dur, 2), path=f"stickers/{name}.png", crop=(cw, ch, ox, oy),
+                    wd=wd, hd=h, x=x, y=y, alpha=alpha, mov=False))
+def FX(cid, t_in, path, cx, cy, scale, dur):  # fx/placements.json: centre x/y, t_in s into the cut, 2× PNGs (size = scale/2)
+    pw, ph = png_size(os.path.join(HERE, path))
+    wd, h = round(pw * scale / 4) * 2, round(ph * scale / 2)
+    x, y = cx - wd // 2, cy - h // 2
+    x, y = max(SAFE[0], min(x, SAFE[2] - wd)), max(SAFE[1], min(y, SAFE[3] - h))
+    OVL.append(dict(T0=round(BYID[cid]["out"] + t_in, 3), dur=dur, path=path, crop=(pw, ph, 0, 0), wd=wd, hd=h, x=x, y=y,
+                    alpha=1.0, mov=False))
+def MOV(T0, path, x, y, dur, scale=None, tint=False):  # pre-rendered alpha animation (ProRes 4444), played once from T0
+    OVL.append(dict(T0=round(T0, 3), dur=dur, path=path, x=x, y=y, scale=scale, tint=tint, mov=True))
+MOV(1.00, "fx/anim/intro-card.mov", 0, 0, 2.5)  # pre-roll: "One tablet. One curve. One answer." under the typed "Pill"
+P("C2", 8.40, "pop-think", y=200, h=220, x=700, dur=1.8)
+P("C3", 19.90, "pill", y=560, h=300, x=600, dur=3.2)
+P("C5", 56.00, "pop-step1", y=150, h=110, to=("C5", 59.00))
+P("C5", 59.04, "pop-step2", y=150, h=110, to=("C5", 63.40))
+P("C5", 64.04, "chip-402", y=420, h=110, dur=3.2)
+P("C6", 68.60, "pop-3d", y=320, h=130, x=60, dur=3.8)
+P("C6", 72.50, "pop-step3", y=150, h=110, to=("C6", 77.55))
+P("C6", 73.40, "pop-drop", y=420, h=200, x=720, dur=2.0)
+P("C6", 74.80, "arrow", y=760, h=360, x=560, dur=2.6)
+P("C6", 80.16, "pop-step4", y=150, h=110, to=("C6", 84.35))
+P("C6", 81.20, "pop-eyes", y=330, h=200, x=700, dur=2.0)
+MOV(to_out("C6", 83.30), "fx/anim/sparkle-burst.mov", 540 - 300, 860 - 300, 1.5)  # "I push this medicine in"
+P("C8", 104.26, "pop-step5", y=150, h=110, to=("C8", 108.70))
+MOV(to_out("C8", 108.84), "fx/anim/countdown-ring.mov", 430, 140, 3.6)  # "this is going to take 60 seconds"
+P("C8", 104.30, "ring", y=735, h=270, x=410, dur=3.2)  # round the dial on the laptop
+P("C9", 112.60, "chip-unoq", y=300, h=136, x=240, dur=5.2)
+P("C9", 117.90, "pop-lights", y=330, h=120, x=60, to=("C9", 124.65))
+P("C10", 125.30, "chip-box", y=420, h=110, dur=3.4)
+P("C10", 128.90, "pop-measure", y=330, h=130, to=("C10", 133.80))
+P("C11", 157.26, "chip-explains", y=420, h=110, dur=3.5)
+P("C12", 164.40, "pop-eyes", y=380, h=200, x=700, dur=2.6)
+MOV(to_out("C12", 168.10), "fx/anim/answers-bounce.mov", 120, 690, 3.0)  # the three answers as he reads the result
+P("C12", 168.60, "pop-grimace", y=120, h=170, x=455, dur=2.6)
+P("C12", 175.80, "pill", y=380, h=280, x=600, dur=2.4)
+for e in json.load(open(os.path.join(HERE, "fx", "placements.json"))):  # the 60-s ring and the 402 chip are placed above
+    if e["cut"] in BYID and not e["sticker"].endswith(("badge-x402.png", "badge-60s.png")):
+        FX(e["cut"], e["t_in"], e["sticker"], e["x"], e["y"], e["scale"], e["dur"])
+# "interactive every second" (owner, 08:03; WordTriggers' fx/words/triggers.json, word onsets + overlay top-left xy):
+# a pill pop on every pill/tablet/medicine word, "magic water" on the cup on every "water", a white hit on "pound"
+TRIG = [e for e in json.load(open(os.path.join(HERE, "fx", "words", "triggers.json")))["triggers"] if e["cut_id"] in BYID]
+PILL_POPS, WATER = [], []
+for e in TRIG:
+    T = to_out(e["cut_id"], e["raw_t"])
+    if e["cls"] == "pill" and e["cut_id"] != "C1":  # C1 has the "Pill" title
+        MOV(T, "fx/words/pill-pop.mov", *e["xy"], 0.8); PILL_POPS.append(T)
+    elif e["cls"] == "water":
+        MOV(T, "fx/words/water-magic.mov", *e["xy"], 1.2); WATER.append(T)
+    elif e["cls"] == "crush":
+        MOV(T, "fx/words/shake-flash.mov", 0, 0, 0.27)
+MOV(to_out("C9", 115.04), "fx/anim/arrow-point.mov", 520 - 62, 1150 - 338, 1.5)  # "Arduino": tip on the board
+MOV(END_START + 0.4, "fx/anim/pill-rain.mov", 0, 0, 3.5)
+P("END", 0.30, "pill", y=360, h=420, x=330, dur=3.7)
+P("END", 0.90, "pop-end", y=1240, h=120, dur=3.1)
+MOV(END_START, "fx/anim/confetti.mov", 0, 0, 3.0)
+OVL.sort(key=lambda o: o["T0"])
+pop_inputs = []
+for j, o in enumerate(OVL):
+    idx, T0, dur = iPA + 1 + j, o["T0"], o["dur"]
+    if o["mov"]:
+        pop_inputs.append(f'-i {o["path"]}')
+        sc = f"scale={o['scale']}:{o['scale']}," if o.get("scale") else ""
+        tn = "colorchannelmixer=rr=0:rb=1:br=1:bb=0," if o.get("tint") else ""  # yellow sparkle → cyan-blue "magic water"
+        fc.append(f"[{idx}:v]format=rgba,{sc}{tn}setpts=PTS-STARTPTS+{T0}/TB[p{j}]")
+        fc.append(f"{vcur}[p{j}]overlay=x={o['x']}:y={o['y']}:eof_action=pass:enable='between(t,{T0},{T0 + dur:.3f})'[o{j}]")
+    else:
+        cw, ch, ox, oy = o["crop"]
+        wd, x, y, hd = o["wd"], o["x"], o["y"], o["hd"]
+        al = f",colorchannelmixer=aa={o['alpha']}" if o["alpha"] < 1 else ""
+        pop_inputs.append(f'-loop 1 -framerate {FPS} -t {dur:.2f} -i {o["path"]}')
+        fc.append(f"[{idx}:v]format=rgba,crop={cw}:{ch}:{ox}:{oy},"
+                  f"scale=w='trunc({wd}*(1-0.45*exp(-t*8)*cos(t*22))/2)*2':h=-2:eval=frame:flags=bicubic{al},"
+                  f"fade=t=in:st=0:d=0.10:alpha=1,fade=t=out:st={dur - 0.18:.2f}:d=0.18:alpha=1,setpts=PTS-STARTPTS+{T0}/TB[p{j}]")
+        fc.append(f"{vcur}[p{j}]overlay=x='{x}+({wd}-overlay_w)/2':y='{y}+({hd}-overlay_h)/2+40*exp(-(t-{T0})*10)*cos((t-{T0})*18)':"
+                  f"eval=frame:enable='between(t,{T0},{T0 + dur:.3f})':eof_action=pass[o{j}]")
     vcur = f"[o{j}]"
 fc.append(f"{vcur}ass=captions.ass:fontsdir=fonts,format=yuv420p[vout]")
 # audio (v8, owner: "I can't hear myself, the music is too loud"): the voice is the master, normalised alone to
 # -16 LUFS; the score sits under it at -38 LUFS (22 LU down) and ducks about 6 dB more while he speaks; soft whoosh per
 # card entry. The full mix is normalised to -16 LUFS, TP -1.5 dBTP (YouTube level).
-whooshes = sorted({round(a, 3) for a, _ in CARDS} | {round(LIST_HEAD[0], 3), round(a0, 3), round(REVEAL, 3)})
-iWH = iHW + 1 + len(END_POPS)
+# sfx at about -18 dB under the -16 LUFS voice: a pop on every sticker, a whoosh on each card entry, uh-oh on "oh no",
+# a ding on the end card (make_music.py writes sfx/*.wav)
+SFX_GAIN = {"pop": 0.13, "whoosh": WHOOSH_GAIN, "uhoh": 0.16, "ding": 0.14}
+sfx_ev = [("whoosh", max(0.0, t - 0.12)) for t in
+          sorted({round(a, 3) for a, _ in CARDS} | {round(LIST_HEAD[0], 3), round(a0, 3), round(REVEAL, 3)})]
+sfx_ev += [("pop", o["T0"]) for o in OVL if not o["mov"]] + [("uhoh", to_out("C12", 168.50)), ("ding", END_START + 0.30)]
+sfx_ev += [("thud", T) for T in SHAKES] + [("plop", to_out("C6", 83.46))] + [("water", T - 0.05) for T in WATER]
+sfx_ev += [("pop", T) for T in PILL_POPS]
+SFX_GAIN.update({"thud": 0.22, "plop": 0.18, "water": 0.14})
+SFX = [s for s in SFX_GAIN if any(n == s for n, _ in sfx_ev)]
+iSFX = iPA + 1 + len(OVL)
 fc.append(f"{pa}loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asplit=2[vo][vsc]")
 fc.append(f"[{iMUS}:a]atrim=0:{TOTAL},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,"
           f"loudnorm=I={MUSIC_LUFS}:TP=-9:LRA=11,aresample=48000,"
           f"afade=t=in:st=0:d=0.3,afade=t=out:st={TOTAL - 1.6:.2f}:d=1.6[mu]")
 fc.append("[mu][vsc]sidechaincompress=threshold=0.04:ratio=3:attack=20:release=300:makeup=1[duck]")
-fc.append(f"[{iWH}:a]aresample=48000,aformat=channel_layouts=stereo,volume={WHOOSH_GAIN},asplit={len(whooshes)}"
-          + "".join(f"[w{m}]" for m in range(len(whooshes))))
-for m, t0 in enumerate(whooshes):
-    ms = int(round(max(0.0, t0 - 0.12) * 1000))  # the whoosh swells into the card's arrival
-    fc.append(f"[w{m}]adelay={ms}|{ms}[wd{m}]")
-fc.append("".join(f"[wd{m}]" for m in range(len(whooshes))) + f"amix=inputs={len(whooshes)}:normalize=0:duration=longest[sfx]")
+sfx_labels = []
+for k, s in enumerate(SFX):
+    evs = [t for n, t in sfx_ev if n == s]
+    fc.append(f"[{iSFX + k}:a]aresample=48000,aformat=channel_layouts=stereo,volume={SFX_GAIN[s]},asplit={len(evs)}"
+              + "".join(f"[{s}{m}]" for m in range(len(evs))))
+    for m, t0 in enumerate(evs):
+        ms = int(round(t0 * 1000))
+        fc.append(f"[{s}{m}]adelay={ms}|{ms}[{s}d{m}]"); sfx_labels.append(f"[{s}d{m}]")
+fc.append("".join(sfx_labels) + f"amix=inputs={len(sfx_labels)}:normalize=0:duration=longest[sfx]")
 fc.append("[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[aout]")
 
 graph = ";\n".join(fc)
 open(os.path.join(HERE, "graph.txt"), "w").write(graph + "\n")
-ins = " \\\n  ".join(inputs + pop_inputs + ["-i sfx/whoosh.wav"])
+ins = " \\\n  ".join(inputs + pop_inputs + [f"-i sfx/{s}.wav" for s in SFX])
 BUILD = f"""#!/usr/bin/env bash
-# Pill pitch cut v8: {NC} cuts + {END_DUR:.0f}-s end card = {TOTAL:.2f} s, 1080x1920 (source is portrait: 1024x576 with -90° rotation).
+# Pill pitch cut v10-interactive: {NC} cuts + {END_DUR:.0f}-s end card = {TOTAL:.2f} s, 1080x1920 (source is portrait: 1024x576 with -90° rotation).
 # Generated by make_edit.py (edit the cut list there, re-run it, never hand-edit the graph).
-#   bash pitch/video/edit/build.sh            full render  -> pitch/video/pill-pitch-v8.mp4
+#   bash pitch/video/edit/build.sh            full render  -> pitch/video/pill-pitch-v10-interactive.mp4
 #   bash pitch/video/edit/build.sh --preview  seconds 0-10 -> pitch/video/pill-pitch-preview10.mp4
 #   bash pitch/video/edit/build.sh --check    filtergraph dry run: 0.1 s to the null muxer, no encode
 set -euo pipefail
@@ -498,7 +604,7 @@ MODE=${{1:-full}}
 case "$MODE" in
   --preview) OUTARGS=(-t 10 -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -c:a aac -b:a 160k -movflags +faststart ../pill-pitch-preview10.mp4) ;;
   --check)   OUTARGS=(-t 0.1 -f null -) ;;
-  full)      OUTARGS=(-c:v libx264 -preset medium -crf 20 -profile:v high -pix_fmt yuv420p -r {FPS} -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../pill-pitch-v8.mp4) ;;
+  full)      OUTARGS=(-c:v libx264 -preset medium -crf 20 -profile:v high -pix_fmt yuv420p -r {FPS} -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../pill-pitch-v10-interactive.mp4) ;;
   *) echo "usage: build.sh [--preview|--check]"; exit 2 ;;
 esac
 "$FF" -hide_banner -y -nostdin \\
@@ -528,5 +634,6 @@ for c in CUTS:
 print(f"| END card | {mmss(END_START)}–{mmss(TOTAL)} | generated | {END_DUR:.2f} | dip to black {END_JOIN[1]:.2f}s | The box measures. Pill explains. / pillmeifyoucan.health / github.com/ShadowEsu/pill-calhacks |")
 print(f"TOTAL {TOTAL:.2f}s; {len(PHRASES)} caption phrases; {len(ev)} ASS events")
 print("CARDS:", [(round(a, 2), l) for a, l in CARDS])
-print("LIST:", [(round(a, 2), l) for a, l in LIST], "ANSWERS at", round(a0, 2), "lift", round(ANS_LIFT, 2), "TITLE", round(HOOK_TITLE, 2))
+print("LIST:", [(round(a, 2), l) for a, l in LIST], "ANSWERS at", round(a0, 2), "TITLE", round(HOOK_TITLE, 2))
+print("OVERLAYS:", [(round(o["T0"], 2), o["path"].split("/")[-1]) for o in OVL])
 print("PHRASES:", [(round(a, 2), round(b, 2), t[:24]) for a, b, t in PHRASES])
