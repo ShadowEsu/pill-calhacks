@@ -7,8 +7,8 @@ If you are reading this after a shutdown: everything below is pushed to **https:
 - Clinic app **https://app.pillmeifyoucan.health** → Vercel project `pill-app`, deploy `dpl_3CL4hiAswvAKtGgarsmCehh6mNgU` (02:52: nosniff/Referrer-Policy headers, links to the new domain).
 - DNS at Porkbun (account preston@unvibe.site): `A @ 76.76.21.21`, `CNAME www cname.vercel-dns.com`, `CNAME app cname.vercel-dns.com`. Done, verified 200 over https.
 - YouTube, channel "Pill" (@pillmeifyoucan, Google account preston@unvibe.site):
-  - Pitch video 1:27, PUBLIC: https://www.youtube.com/watch?v=clBqG3o4MbA
-  - Animated explainer 2:38, Unlisted: https://youtu.be/cTQpc1VoN00
+  - Pitch video 1:27, PUBLIC (quiet re-export; the loud clBqG3o4MbA is private): https://www.youtube.com/watch?v=BZCJtnYEurU
+  - Animated explainer 2:38, PUBLIC, subtitles only (the narrated cTQpc1VoN00 is private): https://youtu.be/gdZAg-kwQG0
   - Clinic app walkthrough 62 s, Unlisted: https://youtu.be/h8rAvjgKoxo
 - Devpost draft "Pill" (Cal Hacks 13.0): the Grok bot "Devpost Hunter" already put the pitch video link and the two site/app links in. Nothing else is in yet.
 - Drive kit (folder "Agent Company - Shipped/HQ/2026-10-25"): DEVPOST-ANSWERS.md (current), DEVPOST-FORM.md, gallery 01–20, pill-deck.pdf. https://drive.google.com/drive/folders/1gXd-B5CU1BKo1GbVIldss1M-IZofhUpK

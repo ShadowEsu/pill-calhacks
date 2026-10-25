@@ -2,8 +2,8 @@
 
 ## Live now (nothing to redo)
 - Website: https://pillmeifyoucan.health · App: https://app.pillmeifyoucan.health
-- Pitch video (public): https://www.youtube.com/watch?v=clBqG3o4MbA
-- Explainer 2:38 (unlisted): https://youtu.be/cTQpc1VoN00 · App walkthrough 62 s (unlisted): https://youtu.be/h8rAvjgKoxo
+- Pitch video (public, quiet re-export): https://www.youtube.com/watch?v=BZCJtnYEurU
+- Explainer 2:38 (public, subtitles only): https://youtu.be/gdZAg-kwQG0 · App walkthrough 62 s (unlisted): https://youtu.be/h8rAvjgKoxo
 - Code: https://github.com/ShadowEsu/pill-calhacks (private until you flip it; `RESUME.md` lists everything)
 - Devpost draft "Pill": video + site/app links are in. Text, 20 gallery pictures, deck PDF, prize ticks: NOT in yet.
 
