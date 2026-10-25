@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Pill · Cal Hacks 13.0</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: #111; font-family: Inter, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  .page { width: 1920px; height: 1080px; padding: 44px 64px 40px; page-break-after: always; break-after: page; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .top { display: flex; align-items: baseline; justify-content: space-between; gap: 36px; border-bottom: 3px solid #111; padding-bottom: 14px; margin-bottom: 24px; }
+  .brand { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+  .pill { width: 56px; height: 26px; border-radius: 13px; background: linear-gradient(90deg, #22c55e 0 50%, #e5e7eb 50% 100%); border: 2px solid #111; }
+  .brand b { font-size: 56px; letter-spacing: -0.03em; }
+  .top .t { font-size: 34px; font-weight: 600; letter-spacing: -0.02em; flex: 1; }
+  .top .n { font-size: 22px; color: #555; flex-shrink: 0; }
+  .grid { flex: 1; display: grid; gap: 28px; min-height: 0; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g21 { grid-template-columns: 1.35fr 1fr; }
+  .g12 { grid-template-columns: 1fr 1.35fr; }
+  figure { margin: 0; min-height: 0; display: flex; flex-direction: column; }
+  figure .im { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; border: 1.5px solid #d4d4d8; border-radius: 16px; overflow: hidden; background: #fafafa; }
+  figure img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  figcaption { font-size: 22px; line-height: 1.3; margin-top: 10px; color: #222; }
+  figcaption b { font-weight: 600; }
+  .foot { display: flex; justify-content: space-between; font-size: 20px; color: #555; margin-top: 18px; border-top: 1.5px solid #d4d4d8; padding-top: 10px; }
+  .chips { display: flex; gap: 14px; }
+  .chip { font-size: 22px; font-weight: 600; padding: 8px 18px; border-radius: 999px; border: 2px solid #111; }
+  .chip.p { background: #dcfce7; } .chip.l { background: #fef3c7; } .chip.u { background: #e5e7eb; }
+  /* cover */
+  .cover h1 { font-size: 96px; margin: 0; line-height: 1; letter-spacing: -0.04em; }
+  .cover .tag { font-size: 40px; font-weight: 500; margin: 10px 0 4px; letter-spacing: -0.02em; }
+  .cover .sub { font-size: 24px; color: #444; margin: 0 0 14px; max-width: 1700px; line-height: 1.3; }
+  .cover .hero { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 26px; flex: 1; min-height: 0; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 16px; }
+  .facts div { border: 2px solid #111; border-radius: 16px; padding: 10px 16px; }
+  .facts b { display: block; font-size: 34px; letter-spacing: -0.02em; }
+  .facts span { font-size: 18px; color: #444; line-height: 1.25; }
+  .stack { display: grid; grid-template-rows: 1fr 1fr; gap: 26px; min-height: 0; }
+</style></head><body>
+
+<!-- 1 · COVER -->
+<section class="page cover">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="n">Cal Hacks 13.0 · pillmeifyoucan.health · app.pillmeifyoucan.health · github.com/ShadowEsu/pill-calhacks</div></div>
+  <h1>Pill</h1>
+  <p class="tag">One tablet, one curve, one answer: before the clinic pays the supplier.</p>
+  <p class="sub">A box of hobby parts around an Arduino UNO Q drops one tablet from a medicine delivery into a cup of water, records how it dissolves with two light sensors, and compares the curve with known-good tablets. The station says one of three things, and that answer decides whether the supplier gets paid.</p>
+  <div class="chips"><span class="chip p">Passed the screen</span><span class="chip l">Needs lab testing</span><span class="chip u">Unable to verify</span></div>
+  <div class="hero" style="margin-top:12px">
+    <figure><div class="im"><img src="../gallery/01-thumbnail-station.jpg"></div><figcaption><b>The station.</b> UNO Q, three LEDs, two photoresistors, a printed chamber with a lid.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/station-06-result-show-mode.png"></div><figcaption><b>Station app.</b> A finished run: the curve, the band, the one-line answer.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/clinic-03-delivery-held.png"></div><figcaption><b>Clinic app.</b> The verdict holds the payment until a pharmacist taps.</figcaption></figure>
+  </div>
+  <div class="facts">
+    <div><b>1 in 10</b><span>medical products in low- and middle-income countries are substandard or falsified (WHO, 2017)</span></div>
+    <div><b>60 s</b><span>from Start to one of three answers; a lab dissolution tester costs $20–100k and takes 7–10 days</span></div>
+    <div><b>3 answers</b><span>never a fourth; no model sets the verdict, code forces the headline to match the measurement</span></div>
+    <div><b>0.05 USDC</b><span>per verdict over Coinbase x402 on Base Sepolia (TESTNET); release only after the pharmacist's tap</span></div>
+  </div>
+</section>
+
+<!-- 2 · THE STATION -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">The station: what is in the box</div><div class="n">2 / 9</div></div>
+  <div class="grid g3">
+    <figure><div class="im"><img src="../gallery/02-station-blue.jpg"></div><figcaption><b>Blue LED on.</b> One photoresistor looks straight through the cup; the other sits at 90° and sees the water go cloudy.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery/04-station-cup.jpg"></div><figcaption><b>The cup in the chamber.</b> Lid closed; every second the board turns all LEDs off and takes a dark reading, so room light cancels out.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery/18-station-parts-drawing.png"></div><figcaption><b>Parts drawing.</b> Arduino UNO Q (3.3 V, 12-bit ADC), two CdS photoresistors, blue / white / red LEDs. The firmware prints one CSV line a second and decides nothing.</figcaption></figure>
+  </div>
+  <div class="foot"><span>Hardware judge: tab 1 shows the live board and its lines-read counter.</span><span>pillmeifyoucan.health/#parts</span></div>
+</section>
+
+<!-- 3 · ONE RUN -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">One run: 60 seconds, six phases</div><div class="n">3 / 9</div></div>
+  <div class="grid g12">
+    <figure><div class="im"><img src="../../figma/deck-preview/11-six-phases.png"></div><figcaption><b>Lights off → clean water (10 s blank) → drop the tablet, 5 stirs, lid → dissolving → settling → verdict.</b> Lid open more than 25 s ends in Unable to verify.</figcaption></figure>
+    <div class="stack">
+      <figure><div class="im"><img src="../../figma/deck-preview/02-the-moment.png"></div><figcaption><b>Same label, chalk inside.</b> The 90° channel stays flat where a real tablet clouds the water: Needs lab testing, $480 held (replay of a simulated curve).</figcaption></figure>
+      <figure><div class="im"><img src="../../figma/deck-preview/06-how-a-run-works.png"></div><figcaption><b>Absorbance rises as the tablet dissolves.</b> Aspirin clouds rather than colours the water, so the side sensor carries the answer.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Reference runs on this box set the band; no reference → Unable to verify. It never guesses.</span><span>Show mode on the table replays our real aspirin run</span></div>
+</section>
+
+<!-- 4 · THREE ANSWERS -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Three answers. Never a guess.</div><div class="n">4 / 9</div></div>
+  <div class="grid g2">
+    <figure><div class="im"><img src="../../figma/deck-preview/07-three-answers.png"></div><figcaption><b>Passed the screen / Needs lab testing / Unable to verify</b>, each with the rule that fired and the plain-English why. A curve cannot prove a medicine is good, so no screen says that.</figcaption></figure>
+    <figure><div class="im"><img src="../../figma/deck-preview/19-what-pass-does-not-mean.png"></div><figcaption><b>What "Passed the screen" does not mean.</b> It is a screening result, not a lab test. Claude reads the label and the imprint; it never sets the answer.</figcaption></figure>
+  </div>
+  <div class="foot"><span>Station app: Sources list (openFDA, RxNav, the label read) under every report · Ask Pill answers only from the report.</span><span>app.pillmeifyoucan.health</span></div>
+</section>
+
+<!-- 5 · STATION APP SCREENS -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Station app: laptop and phone</div><div class="n">5 / 9</div></div>
+  <div class="grid" style="grid-template-columns: 1.6fr 1fr 0.55fr 0.55fr">
+    <figure><div class="im"><img src="../gallery-all/station-05-measure-prepare.png"></div><figcaption><b>Measure.</b> Prepare → clean water → tablet in → dissolving → result, with the live lines-read counter.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/station-08-history.png"></div><figcaption><b>History.</b> Every run with its answer, rule id and curve.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/station-22-phone-result-show.png"></div><figcaption><b>Phone result.</b></figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/station-24-phone-ask-pill.png"></div><figcaption><b>Ask Pill</b> ("Why this answer?").</figcaption></figure>
+  </div>
+  <div class="foot"><span>Personal mode: bigger text, recall status per bottle, read-aloud.</span><span>localhost:8000 live · localhost:8001 replay</span></div>
+</section>
+
+<!-- 6 · CLINIC APP -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Clinic app: the verdict holds the payment</div><div class="n">6 / 9</div></div>
+  <div class="grid g3">
+    <figure><div class="im"><img src="../gallery-all/clinic-01-dashboard.png"></div><figcaption><b>Dashboard.</b> Deliveries, runs, money held, the day's decisions.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/clinic-07-pay-release.png"></div><figcaption><b>Release.</b> Passed the screen + no recall + within the cap + the pharmacist's tap. Nothing moves without the tap.</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/clinic-08-pay-escalate.png"></div><figcaption><b>Escalate.</b> Anything but a pass holds the money and quotes the policy clause (P1–P6) that fired.</figcaption></figure>
+  </div>
+  <div class="foot"><span>Every decision is logged with the lot, the time, the rule and the clause. The model can only downgrade a decision.</span><span>app.pillmeifyoucan.health/demo</span></div>
+</section>
+
+<!-- 7 · MONEY / COINBASE -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">How the money moves: Coinbase x402, CDP wallets, USDC on Base Sepolia (TESTNET)</div><div class="n">7 / 9</div></div>
+  <div class="grid g21">
+    <figure><div class="im"><img src="../gallery/05-money-flow.png"></div><figcaption><b>The tree.</b> Measure → three answers → the policy agent → three CDP server wallets (clinic pays in, escrow holds, supplier is paid). Under it, the x402 lane: POST /verify → 402 with the price → the buyer checks its 1 USDC / day cap and signs → facilitator verifies → 200 + verdict. Dashed = not yet run.</figcaption></figure>
+    <div class="stack">
+      <figure><div class="im"><img src="../gallery-all/clinic-06-verify-x402-exchange.png"></div><figcaption><b>A real 402 today.</b> 0.05 test USDC per verdict; the facilitator's verify step answered for real. The paid 200 is pending a CDP key.</figcaption></figure>
+      <figure><div class="im"><img src="../../figma/deck-preview/09-coinbase.png"></div><figcaption><b>Pay, buy, earn.</b> Escrow → supplier in USDC; buy a verdict from another station for cents; every station sells /verify.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>@x402/express · @x402/evm · CDP SDK (not the MCP). Everything is TESTNET and every screen says so.</span><span>pillmeifyoucan.health/#coinbase</span></div>
+</section>
+
+<!-- 8 · WEBSITE -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">The website: pillmeifyoucan.health</div><div class="n">8 / 9</div></div>
+  <div class="grid g3">
+    <figure><div class="im"><img src="../gallery-all/site-01-hero.png"></div><figcaption><b>Hero.</b> "The box measures. Pill explains."</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/site-14-three-answers.png"></div><figcaption><b>Three answers</b> and what is real now (first aspirin run, no reference yet).</figcaption></figure>
+    <figure><div class="im"><img src="../gallery-all/site-26-coinbase-x402.png"></div><figcaption><b>What Coinbase is for here.</b> One x402 call in four steps; press Call /verify to replay 402 → sign → 200.</figcaption></figure>
+  </div>
+  <div class="foot"><span>Vite + anime.js, a scroll-synced story, the station exploded view, blueprints, pricing calculator, limits page ("what it won't claim").</span><span>Film at /#film · demo video youtube.com/watch?v=yXEmc25dfMw</span></div>
+</section>
+
+<!-- 9 · FIGMA WORKFLOW -->
+<section class="page">
+  <div class="top"><div class="brand"><span class="pill"></span><b>Pill</b></div><div class="t">Code first, then Figma from the code</div><div class="n">9 / 9</div></div>
+  <div class="grid g3">
+    <figure><div class="im"><img src="../../figma/deck-preview/14-workflow.png"></div><figcaption><b>Four stages, timed from git.</b> Ideation with AI judge panels (≈255 min) → prototyping in code + Figma Make (≈65 min) → handoff → code generation.</figcaption></figure>
+    <figure><div class="im"><img src="../../figma/deck-preview/15-design-from-code.png"></div><figcaption><b>This deck was generated from the repo.</b> One JSON file → the HTML deck, the PDF, the PPTX, and a Figma plugin that draws the same JSON (tested against a stub of the Figma API).</figcaption></figure>
+    <figure><div class="im"><img src="../../figma/deck-preview/17-what-broke.png"></div><figcaption><b>What broke, and what it changed.</b> The P6 hold rule, a double deploy, the REST API that can't draw, 8 of 27 tokens surviving the hand copy.</figcaption></figure>
+  </div>
+  <div class="foot"><span>Deck in Figma Slides: figma.com/deck/xSmcPKdRTVgKI7XzGoqQ0R/pill-deck · stage log in figma/STAGE-LOG.md</span><span>Thank you, Cal Hacks.</span></div>
+</section>
+</body></html>
