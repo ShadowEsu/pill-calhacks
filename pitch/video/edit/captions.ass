@@ -9,7 +9,7 @@ YCbCr Matrix: TV.709
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,Inter Bold,84,&H0000E5FF,&H0000E5FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,2,60,60,300,1
+Style: Cap,Inter Bold,84,&H0000E5FF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,2,60,60,300,1
 Style: Hook,Instrument Serif,200,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,5,40,40,0,1
 Style: Label,Inter SemiBold,30,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,4,0,1,0,0,7,0,0,0,1
 Style: ListHead,Inter SemiBold,24,&H33FFFFFF,&H33FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,6,0,1,0,0,7,0,0,0,1
@@ -22,67 +22,67 @@ Style: Card,Inter,58,&H00111111,&H00111111,&H00E6EFF4,&H00000000,-1,0,0,0,100,10
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 5,0:00:00.20,0:00:02.36,Cap,,60,60,300,,{\fad(0,80)}So what we built is Pill.
-Dialogue: 5,0:00:02.36,0:00:04.01,Cap,,60,60,300,,{\fad(0,80)}Pill is a hardware\Nand software device.
-Dialogue: 5,0:00:04.41,0:00:06.41,Cap,,60,60,800,,{\fad(0,80)}Why are we talking\Nabout pills?
-Dialogue: 5,0:00:06.41,0:00:08.29,Cap,,60,60,800,,{\fad(0,80)}Pills go through a\Nvery intense process
-Dialogue: 5,0:00:08.29,0:00:09.38,Cap,,60,60,800,,{\fad(0,80)}with the FDA,
-Dialogue: 5,0:00:09.80,0:00:11.78,Cap,,60,60,800,,{\fad(0,80)}they have to go through\Nthis process several times
-Dialogue: 5,0:00:11.78,0:00:14.06,Cap,,60,60,800,,{\fad(0,80)}before being checked out\Nthrough a normal pharmacy,
-Dialogue: 5,0:00:14.06,0:00:15.23,Cap,,60,60,800,,{\fad(0,80)}like Walgreens.
-Dialogue: 5,0:00:15.42,0:00:18.79,Cap,,60,60,800,,{\fad(0,80)}I got this from Walgreens:\Nit's an aspirin 81.
-Dialogue: 5,0:00:18.80,0:00:20.58,Cap,,60,60,800,,{\fad(0,80)}In the final process,
-Dialogue: 5,0:00:20.58,0:00:22.94,Cap,,60,60,800,,{\fad(0,80)}some of them could\Nbe malfunctioned,
-Dialogue: 5,0:00:22.94,0:00:23.74,Cap,,60,60,800,,{\fad(0,80)}people could have bad
-Dialogue: 5,0:00:23.74,0:00:26.47,Cap,,60,60,800,,{\fad(0,80)}intentions and put\Ndifferent drugs in here.
-Dialogue: 5,0:00:26.58,0:00:28.25,Cap,,60,60,300,,{\fad(0,80)}Let me go through\Nthe app first.
-Dialogue: 5,0:00:29.52,0:00:32.33,Cap,,60,60,300,,{\fad(0,80)}If we check my medical,
-Dialogue: 5,0:00:32.70,0:00:35.47,Cap,,60,60,300,,{\fad(0,80)}First we put in the\Nprescription of the drug,
-Dialogue: 5,0:00:35.50,0:00:37.54,Cap,,60,60,300,,{\fad(0,80)}and then we use it,
-Dialogue: 5,0:00:37.54,0:00:39.39,Cap,,60,60,300,,{\fad(0,80)}as well as what it looks like.
-Dialogue: 5,0:00:40.66,0:00:42.40,Cap,,60,60,300,,{\fad(0,80)}As we click this,
-Dialogue: 5,0:00:42.40,0:00:44.94,Cap,,60,60,300,,{\fad(0,80)}it's going to tell us to\Nget the water inside.
-Dialogue: 5,0:00:45.29,0:00:46.23,Cap,,60,60,300,,{\fad(0,80)}What we have in this
-Dialogue: 5,0:00:46.23,0:00:48.67,Cap,,60,60,300,,{\fad(0,80)}beautifully\N3D-printed device:
-Dialogue: 5,0:00:48.67,0:00:50.67,Cap,,60,60,300,,{\fad(0,80)}we're going to put\Nsome water in there.
-Dialogue: 5,0:00:50.67,0:00:54.58,Cap,,60,60,300,,{\fad(0,80)}There's going to be a\Nmarking, just like so.
-Dialogue: 5,0:00:54.75,0:00:55.76,Cap,,60,60,300,,{\fad(0,80)}Perfect.
-Dialogue: 5,0:00:56.93,0:00:58.82,Cap,,60,60,300,,{\fad(0,80)}As I click start,
-Dialogue: 5,0:00:59.23,0:01:00.96,Cap,,60,60,300,,{\fad(0,80)}I push this medicine in.
-Dialogue: 5,0:01:01.54,0:01:03.43,Cap,,60,60,300,,{\fad(0,80)}First, I'm going to pound it.
-Dialogue: 5,0:01:05.24,0:01:06.69,Cap,,60,60,300,,{\fad(0,80)}Pounding it.
-Dialogue: 5,0:01:09.58,0:01:11.14,Cap,,60,60,300,,{\fad(0,80)}As that countdown is going,
-Dialogue: 5,0:01:11.14,0:01:13.31,Cap,,60,60,300,,{\fad(0,80)}I put the medicine inside,
-Dialogue: 5,0:01:14.02,0:01:15.88,Cap,,60,60,300,,{\fad(0,80)}and I mix it with my hand.
-Dialogue: 5,0:01:15.88,0:01:17.59,Cap,,60,60,300,,{\fad(0,80)}Excuse the disturbance.
-Dialogue: 5,0:01:18.94,0:01:19.87,Cap,,60,60,300,,{\fad(0,80)}Perfect.
-Dialogue: 5,0:01:20.80,0:01:22.79,Cap,,60,60,300,,{\fad(0,80)}Alrighty, now\Nthat it's ready,
-Dialogue: 5,0:01:22.80,0:01:24.61,Cap,,60,60,300,,{\fad(0,80)}we will go through\Nthe countdown.
-Dialogue: 5,0:01:24.78,0:01:26.16,Cap,,60,60,300,,{\fad(0,80)}This is going to\Ntake 60 seconds,
-Dialogue: 5,0:01:26.16,0:01:28.00,Cap,,60,60,300,,{\fad(0,80)}and as I walk you\Nthrough the process,
-Dialogue: 5,0:01:28.00,0:01:28.94,Cap,,60,60,300,,{\fad(0,80)}this is going to keep going.
-Dialogue: 5,0:01:29.31,0:01:30.95,Cap,,60,60,300,,{\fad(0,80)}As you see in this hardware,
-Dialogue: 5,0:01:30.95,0:01:33.92,Cap,,60,60,300,,{\fad(0,80)}we use an Arduino UNO Q\Nfor the main head and CPU.
-Dialogue: 5,0:01:34.91,0:01:38.89,Cap,,60,60,300,,{\fad(0,80)}It uses red, blue\Nand white lights,
-Dialogue: 5,0:01:38.89,0:01:41.16,Cap,,60,60,300,,{\fad(0,80)}as well as a photoresistor\Nat the back.
-Dialogue: 5,0:01:41.74,0:01:45.54,Cap,,60,60,300,,{\fad(0,80)}Since this is black and\Nthere are no lights inside,
-Dialogue: 5,0:01:45.54,0:01:49.17,Cap,,60,60,300,,{\fad(0,80)}we use these three colours\Nto find a good measurement.
-Dialogue: 5,0:01:50.48,0:01:52.18,Cap,,60,60,300,,{\fad(0,80)}As we use the water
-Dialogue: 5,0:01:52.18,0:01:54.13,Cap,,60,60,300,,{\fad(0,80)}and it does the\N10-second countdown,
-Dialogue: 5,0:01:54.18,0:01:56.78,Cap,,60,60,300,,{\fad(0,80)}it goes through what\Nis inside the water
-Dialogue: 5,0:01:56.78,0:01:59.87,Cap,,60,60,300,,{\fad(0,80)}and sees it as\Nstable, variable.
-Dialogue: 5,0:01:59.90,0:02:00.94,Cap,,60,60,300,,{\fad(0,80)}And using these lights,
-Dialogue: 5,0:02:00.94,0:02:02.70,Cap,,60,60,300,,{\fad(0,80)}we can find a true\Nconcentration
-Dialogue: 5,0:02:02.70,0:02:04.34,Cap,,60,60,300,,{\fad(0,80)}of what is in the\Nprescription
-Dialogue: 5,0:02:04.34,0:02:05.77,Cap,,60,60,300,,{\fad(0,80)}and what is in the clouds.
-Dialogue: 5,0:02:05.97,0:02:07.78,Cap,,60,60,300,,{\fad(0,80)}As the timer runs out,
-Dialogue: 5,0:02:08.65,0:02:09.60,Cap,,60,60,300,,{\fad(0,80)}it's going to check.
-Dialogue: 5,0:02:09.97,0:02:12.21,Cap,,60,60,300,,{\fad(0,80)}And oh no: it's\Nunable to verify.
-Dialogue: 5,0:02:12.21,0:02:13.19,Cap,,60,60,800,,{\fad(0,80)}Because guess what,
-Dialogue: 5,0:02:13.19,0:02:15.64,Cap,,60,60,800,,{\fad(0,80)}I put morphine in here\Ninstead of aspirin.
-Dialogue: 5,0:02:15.91,0:02:17.04,Cap,,60,60,800,,{\fad(0,80)}So watch out.
-Dialogue: 5,0:02:18.63,0:02:20.00,Cap,,60,60,800,,{\fad(0,80)}Please swallow\Nthe right pills.
-Dialogue: 5,0:02:20.01,0:02:20.91,Cap,,60,60,800,,{\fad(0,80)}Thank you.
+Dialogue: 5,0:00:00.20,0:00:02.36,Cap,,60,60,300,,{\fad(0,80)}{\kf5}So {\kf7}what {\kf16}we {\kf28}built {\kf52}is {\kf14}Pill.
+Dialogue: 5,0:00:02.36,0:00:04.01,Cap,,60,60,300,,{\fad(0,80)}{\kf22}Pill {\kf20}is {\kf12}a {\kf38}hardware\N{\kf26}and {\kf44}software {\kf32}device.
+Dialogue: 5,0:00:04.41,0:00:06.41,Cap,,60,60,800,,{\fad(0,80)}{\kf22}Why {\kf12}are {\kf8}we {\kf22}talking\N{\kf20}about {\kf26}pills?
+Dialogue: 5,0:00:06.41,0:00:08.29,Cap,,60,60,800,,{\fad(0,80)}{\kf24}Pills {\k30}{\kf18}go {\kf16}through {\kf12}a\N{\kf20}very {\kf32}intense {\kf36}process
+Dialogue: 5,0:00:08.29,0:00:09.38,Cap,,60,60,800,,{\fad(0,80)}{\kf26}with {\kf14}the {\kf34}FDA,
+Dialogue: 5,0:00:09.80,0:00:11.78,Cap,,60,60,800,,{\fad(0,80)}{\kf34}they {\kf14}have {\kf12}to {\kf14}go {\kf16}through\N{\kf16}this {\kf30}process {\kf28}several {\kf34}times
+Dialogue: 5,0:00:11.78,0:00:14.06,Cap,,60,60,800,,{\fad(0,80)}{\kf24}before {\kf26}being {\kf22}checked {\kf28}out\N{\kf52}through {\kf10}a {\kf24}normal {\kf42}pharmacy,
+Dialogue: 5,0:00:14.06,0:00:15.23,Cap,,60,60,800,,{\fad(0,80)}{\kf36}like {\kf36}Walgreens.
+Dialogue: 5,0:00:15.42,0:00:18.79,Cap,,60,60,800,,{\fad(0,80)}{\kf12}I {\kf14}got {\kf14}this {\kf14}from {\kf36}Walgreens:\N{\k18}{\kf56}it's {\kf5}an {\kf25}aspirin {\kf30}81.
+Dialogue: 5,0:00:18.80,0:00:20.58,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf90}In {\kf10}the {\kf24}final {\kf40}process,
+Dialogue: 5,0:00:20.58,0:00:22.94,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf24}some {\kf14}of {\kf16}them {\kf32}could\N{\kf14}be {\kf94}malfunctioned,
+Dialogue: 5,0:00:22.94,0:00:23.74,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf18}people {\kf24}could {\kf20}have {\kf18}bad
+Dialogue: 5,0:00:23.74,0:00:26.47,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf42}intentions {\kf52}and {\kf20}put\N{\kf34}different {\kf34}drugs {\kf68}in {\kf22}here.
+Dialogue: 5,0:00:26.58,0:00:28.25,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf24}Let {\kf6}me {\kf14}go {\kf14}through\N{\kf14}the {\kf16}app {\kf34}first.
+Dialogue: 5,0:00:29.52,0:00:32.33,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf48}If {\kf26}we {\kf62}check {\kf72}my {\kf28}medical,
+Dialogue: 5,0:00:32.70,0:00:35.47,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf26}First {\kf22}we {\k24}{\kf12}put {\kf5}in {\kf7}the\N{\kf58}prescription {\kf46}of {\kf12}the {\kf20}drug,
+Dialogue: 5,0:00:35.50,0:00:37.54,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf28}and {\kf24}then {\kf46}we {\kf46}use {\kf32}it,
+Dialogue: 5,0:00:37.54,0:00:39.39,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf24}as {\kf18}well {\kf28}as {\kf20}what {\kf12}it {\kf16}looks {\kf22}like.
+Dialogue: 5,0:00:40.66,0:00:42.40,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf64}As {\kf24}we {\kf24}click {\kf40}this,
+Dialogue: 5,0:00:42.40,0:00:44.94,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf28}it's {\kf5}going {\kf9}to {\kf16}tell {\kf20}us {\kf28}to\N{\kf24}get {\kf16}the {\kf24}water {\kf42}inside.
+Dialogue: 5,0:00:45.29,0:00:46.23,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf16}What {\kf16}we {\kf24}have {\kf20}in {\kf18}this
+Dialogue: 5,0:00:46.23,0:00:48.67,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf58}beautifully\N{\kf86}3D-printed {\kf56}device:
+Dialogue: 5,0:00:48.67,0:00:50.67,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf76}we're {\kf5}going {\kf5}to {\kf12}put\N{\kf18}some {\kf24}water {\kf18}in {\kf18}there.
+Dialogue: 5,0:00:50.67,0:00:54.58,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf18}There's {\kf8}going {\kf6}to {\kf12}be {\kf6}a\N{\kf28}marking, {\k100}{\kf30}just {\kf54}like {\kf84}so.
+Dialogue: 5,0:00:54.75,0:00:55.76,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf56}Perfect.
+Dialogue: 5,0:00:56.93,0:00:58.82,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf36}As {\kf32}I {\kf26}click {\kf50}start,
+Dialogue: 5,0:00:59.23,0:01:00.96,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf66}I {\kf16}push {\kf28}this {\kf20}medicine {\kf30}in.
+Dialogue: 5,0:01:01.54,0:01:03.43,Cap,,60,60,300,,{\fad(0,80)}{\kf24}First, {\k20}{\kf6}I'm {\kf10}going {\kf14}to {\kf28}pound {\kf42}it.
+Dialogue: 5,0:01:05.24,0:01:06.69,Cap,,60,60,300,,{\fad(0,80)}{\kf62}Pounding {\kf38}it.
+Dialogue: 5,0:01:09.58,0:01:11.14,Cap,,60,60,300,,{\fad(0,80)}{\kf30}As {\kf40}that {\kf26}countdown {\kf26}is {\kf20}going,
+Dialogue: 5,0:01:11.14,0:01:13.31,Cap,,60,60,300,,{\fad(0,80)}{\kf28}I {\kf18}put {\kf28}the {\kf22}medicine {\kf76}inside,
+Dialogue: 5,0:01:14.02,0:01:15.88,Cap,,60,60,300,,{\fad(0,80)}{\kf28}and {\kf28}I {\kf14}mix {\kf16}it {\kf18}with {\kf14}my {\kf40}hand.
+Dialogue: 5,0:01:15.88,0:01:17.59,Cap,,60,60,300,,{\fad(0,80)}{\kf46}Excuse {\kf36}the {\kf44}disturbance.
+Dialogue: 5,0:01:18.94,0:01:19.87,Cap,,60,60,300,,{\fad(0,80)}{\kf48}Perfect.
+Dialogue: 5,0:01:20.80,0:01:22.79,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf40}Alrighty, {\k10}{\kf24}now\N{\kf18}that {\kf34}it's {\kf28}ready,
+Dialogue: 5,0:01:22.80,0:01:24.61,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf28}we {\kf38}will {\kf14}go {\kf18}through\N{\kf14}the {\kf24}countdown.
+Dialogue: 5,0:01:24.78,0:01:26.16,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf16}This {\kf14}is {\kf6}going {\kf6}to\N{\kf16}take {\kf28}60 {\kf32}seconds,
+Dialogue: 5,0:01:26.16,0:01:28.00,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf16}and {\kf42}as {\kf12}I {\kf16}walk {\kf16}you\N{\kf10}through {\kf14}the {\kf30}process,
+Dialogue: 5,0:01:28.00,0:01:28.94,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf14}this {\kf16}is {\kf8}going {\kf10}to {\kf10}keep {\kf26}going.
+Dialogue: 5,0:01:29.31,0:01:30.95,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf20}As {\kf16}you {\kf22}see {\kf12}in {\kf12}this {\kf38}hardware,
+Dialogue: 5,0:01:30.95,0:01:33.92,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf28}we {\kf16}use {\kf14}an {\kf32}Arduino {\kf36}UNO {\kf5}Q\N{\kf11}for {\kf14}the {\kf18}main {\kf24}head {\kf26}and {\kf28}CPU.
+Dialogue: 5,0:01:34.91,0:01:38.89,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf22}It {\kf40}uses {\kf42}red, {\k44}{\kf36}blue\N{\k56}{\kf12}and {\kf82}white {\kf44}lights,
+Dialogue: 5,0:01:38.89,0:01:41.16,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf16}as {\kf20}well {\kf16}as {\kf14}a {\kf52}photoresistor\N{\kf32}at {\kf16}the {\kf22}back.
+Dialogue: 5,0:01:41.74,0:01:45.54,Cap,,60,60,300,,{\fad(0,80)}{\kf48}Since {\kf40}this {\kf34}is {\kf58}black {\k10}{\kf24}and\N{\kf14}there {\kf12}are {\kf16}no {\kf46}lights {\kf46}inside,
+Dialogue: 5,0:01:45.54,0:01:49.17,Cap,,60,60,300,,{\fad(0,80)}{\kf38}we {\kf16}use {\kf22}these {\kf26}three {\kf30}colours\N{\kf52}to {\kf34}find {\kf26}a {\kf26}good {\kf48}measurement.
+Dialogue: 5,0:01:50.48,0:01:52.18,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf32}As {\kf44}we {\kf38}use {\kf16}the {\kf26}water
+Dialogue: 5,0:01:52.18,0:01:54.13,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf34}and {\kf14}it {\kf18}does {\kf16}the\N{\kf24}10-second {\kf44}countdown,
+Dialogue: 5,0:01:54.18,0:01:56.78,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf30}it {\kf28}goes {\kf42}through {\kf52}what\N{\kf12}is {\kf42}inside {\kf30}the {\kf24}water
+Dialogue: 5,0:01:56.78,0:01:59.87,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf44}and {\kf34}sees {\kf18}it {\kf24}as\N{\kf68}stable, {\k36}{\kf40}variable.
+Dialogue: 5,0:01:59.90,0:02:00.94,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf30}And {\kf24}using {\kf24}these {\kf26}lights,
+Dialogue: 5,0:02:00.94,0:02:02.70,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf22}we {\kf12}can {\kf22}find {\kf16}a {\kf52}true\N{\kf52}concentration
+Dialogue: 5,0:02:02.70,0:02:04.34,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf56}of {\kf18}what {\kf32}is {\kf20}in {\kf8}the\N{\kf30}prescription
+Dialogue: 5,0:02:04.34,0:02:05.77,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf68}and {\kf18}what {\kf10}is {\kf14}in {\kf12}the {\kf18}clouds.
+Dialogue: 5,0:02:05.97,0:02:07.78,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf30}As {\kf22}the {\kf26}timer {\kf28}runs {\kf30}out,
+Dialogue: 5,0:02:08.65,0:02:09.60,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf16}it's {\kf6}going {\kf10}to {\kf18}check.
+Dialogue: 5,0:02:09.97,0:02:12.21,Cap,,60,60,300,,{\fad(0,80)}{\k1}{\kf46}And {\kf20}oh {\kf18}no: {\k20}{\kf16}it's\N{\kf22}unable {\kf24}to {\kf30}verify.
+Dialogue: 5,0:02:12.21,0:02:13.19,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf28}Because {\kf14}guess {\kf26}what,
+Dialogue: 5,0:02:13.19,0:02:15.64,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf26}I {\kf14}put {\kf44}morphine {\kf20}in {\kf20}here\N{\kf28}instead {\kf20}of {\kf28}aspirin.
+Dialogue: 5,0:02:15.91,0:02:17.04,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf5}So {\kf25}watch {\kf38}out.
+Dialogue: 5,0:02:18.63,0:02:20.00,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf14}Please {\kf28}swallow\N{\kf18}the {\kf10}right {\kf22}pills.
+Dialogue: 5,0:02:20.01,0:02:20.91,Cap,,60,60,800,,{\fad(0,80)}{\k1}{\kf14}Thank {\kf20}you.
 Dialogue: 4,0:00:01.28,0:00:04.23,Hook,,0,0,0,,{\an5\move(540,528,540,504,0,300)\fad(300,200)\1c&H00000000&\1a&H60&\blur4}Pill
 Dialogue: 5,0:00:01.28,0:00:04.23,Hook,,0,0,0,,{\an5\move(540,524,540,500,0,300)\fad(300,200)}Pill
 Dialogue: 2,0:00:33.66,0:00:38.56,Rule,,0,0,0,,{\an7\pos(56,1226)\fad(200,160)\1c&H00000000&\1a&H6B&\blur2}{\p1}m 12 0 l 635 0 b 641.6 0 647 5.4 647 12 l 647 84 b 647 90.6 641.6 96 635 96 l 12 96 b 5.4 96 0 90.6 0 84 l 0 12 b 0 5.4 5.4 0 12 0{\p0}

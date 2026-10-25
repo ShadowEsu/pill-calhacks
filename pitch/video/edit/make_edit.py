@@ -6,8 +6,8 @@
 Timing comes from whisper word onsets (asr/audio16k.json: `whisper small.en --word_timestamps True` on the raw audio).
 Every caption phrase starts on the onset of its first word, and every card starts on the onset of its cue word;
 the wording comes from the Gemini transcript where whisper mishears (TRANSCRIPT.md).
-Look: big yellow Inter Bold captions (84, black 4-px outline, ≤ 2 lines per cue) over a soft bottom scrim; lower-third
-text cards (2-px purple rule + tracked caps label); no stickers, no per-word pops. End card: v2's layout, v7 links.
+Look: Inter Bold 84 karaoke captions (each word sweeps white → yellow as he says it, black 4-px outline, ≤ 2 lines per
+cue) over a soft bottom scrim; lower-third text cards (2-px purple rule + tracked caps label). End card: v2's, v7 links.
 """
 import json, os, re
 
@@ -100,9 +100,9 @@ CUTS = [
 END_JOIN = ("fadeblack", 0.45)
 PUSH = 0.04        # slow push-in over each cut (≤ 6 %)
 HOOK_PUSH = 0.06   # the hardware shot
-MUSIC_GAIN = 0.24  # v2's 0.34 minus 3 dB; ducked under the voice
+MUSIC_LUFS = -38  # v8: a barely-there bed, 22 LU under the voice stem (voice alone -16 LUFS)
 WHOOSH_GAIN = 0.12 # one soft whoosh per card entry
-CAP_SIZE = 84     # v7: big yellow Inter Bold, black 4-px outline (owner: "bigger and better, highlighted yellow")
+CAP_SIZE = 84     # Inter Bold, black 4-px outline; v8: karaoke, each word sweeps white → yellow as he says it
 CAP_ML = 60
 CAP_MV = 300      # caption block bottom at y=1620 (2 lines reach up to ~y=1416, under the y=1250 card's panel)
 CAP_MV_HIGH = 800 # seated cuts (laptop screen in the lower third): bottom at y=1120, over his shirt, above the cards
@@ -254,6 +254,43 @@ def cap_chunks(text):
         m = min(range(1, len(g)), key=lambda m: max(cap_w(" ".join(g[:m])), cap_w(" ".join(g[m:]))))
         out.append((g, " ".join(g[:m]) + r"\N" + " ".join(g[m:])))
     return out
+def karaoke(t, a, b, c):
+    """Word-by-word highlight: each word sweeps white → yellow (\\kf) over its whisper start–end; words whisper doesn't
+    have verbatim (caption trims like "3D-printed", "UNO Q") get times interpolated between their matched neighbours."""
+    toks = [(w, li < len(t.split(r"\N")) - 1 and j == len(ln.split()) - 1)
+            for li, ln in enumerate(t.split(r"\N")) for j, w in enumerate(ln.split())]
+    sa, sb = c["src"][0] + a - c["out"], c["src"][0] + b - c["out"]
+    times, last = [], sa - 0.35
+    for w, _ in toks:
+        m = next((x for x in WORDS if norm(x["word"]) == norm(w) and last <= x["start"] <= sb + 0.1), None)
+        if m:
+            times.append([to_out(c["id"], m["start"]), to_out(c["id"], m["end"])]); last = m["start"] + 0.01
+        else:
+            times.append(None)
+    k = 0
+    while k < len(times):  # interpolate runs of unmatched words
+        if times[k] is None:
+            j = k
+            while j < len(times) and times[j] is None:
+                j += 1
+            t0 = times[k - 1][1] if k else a
+            t1 = times[j][0] if j < len(times) else max(t0 + 0.3 * (j - k), min(b, t0 + 0.3 * (j - k)))
+            step = max(t1 - t0, 0.1 * (j - k)) / (j - k)
+            for n in range(k, j):
+                times[n] = [t0 + step * (n - k), t0 + step * (n - k + 1)]
+            k = j
+        k += 1
+    out, cur = [], 0
+    base = int(a * 100 + 1e-6)  # the event start as ass_t writes it
+    for n, ((w, brk), (w0, w1)) in enumerate(zip(toks, times)):
+        st = max(cur, round(w0 * 100) - base)
+        if st > cur:
+            out.append(rf"{{\k{st - cur}}}")
+        nxt = round(times[n + 1][0] * 100) - base if n + 1 < len(times) else st + 999
+        d = max(5, min(round((w1 - w0) * 100), nxt - st if nxt > st else 5))
+        out.append(rf"{{\kf{d}}}{w}" + (r"\N" if brk else " " if n + 1 < len(toks) else ""))
+        cur = st + d
+    return "".join(out)
 for (a, b, text), high, ci in zip(PHRASES, PHRASE_HIGH, PHRASE_CUT):
     c, chunks = CUTS[ci], cap_chunks(text)
     starts_, pos = [a], len(" ".join(chunks[0][0])) + 1
@@ -265,7 +302,8 @@ for (a, b, text), high, ci in zip(PHRASES, PHRASE_HIGH, PHRASE_CUT):
         starts_.append(min(max(t0, starts_[-1] + 0.5), b - 0.4))
         pos += len(" ".join(ws)) + 1
     for k, (_, t) in enumerate(chunks):
-        dlg(5, starts_[k], starts_[k + 1] if k + 1 < len(chunks) else b, "Cap", r"\fad(0,80)", t,
+        e0 = starts_[k + 1] if k + 1 < len(chunks) else b
+        dlg(5, starts_[k], e0, "Cap", r"\fad(0,80)", karaoke(t, starts_[k], e0, c),
             CAP_ML, CAP_ML, CAP_MV_HIGH if high else CAP_MV)
 # hook title: clean serif, no halo; fades up and rises 24 px over 300 ms on the word "Pill"
 soft(4, HOOK_TITLE, CUTS[0]["dur"] - 0.05, "Hook", r"\an5\move(540,524,540,500,0,300)\fad(300,200)", "Pill", dy=4)
@@ -334,7 +372,7 @@ YCbCr Matrix: TV.709
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,Inter Bold,{CAP_SIZE},&H0000E5FF,&H0000E5FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,2,{CAP_ML},{CAP_ML},{CAP_MV},1
+Style: Cap,Inter Bold,{CAP_SIZE},&H0000E5FF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,2,{CAP_ML},{CAP_ML},{CAP_MV},1
 Style: Hook,Instrument Serif,200,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,5,40,40,0,1
 Style: Label,Inter SemiBold,30,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,4,0,1,0,0,7,0,0,0,1
 Style: ListHead,Inter SemiBold,24,&H33FFFFFF,&H33FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,6,0,1,0,0,7,0,0,0,1
@@ -416,30 +454,31 @@ for j, (name, x, y, h, st, dur) in enumerate(END_POPS):
               f"eval=frame:enable='between(t,{T0},{T0 + dur:.3f})':eof_action=pass[o{j}]")
     vcur = f"[o{j}]"
 fc.append(f"{vcur}ass=captions.ass:fontsdir=fonts,format=yuv420p[vout]")
-# audio: voice ladder + v2's score, 3 dB lower and ducked under the voice + a soft whoosh on each card entry;
-# -23 LUFS integrated, true peak ≤ -3 dBTP in the MP4 (owner: v5 at -16 LUFS was too loud). loudnorm aims at -4 dBTP
-# because the AAC encode adds inter-sample peak (TP=-3 here measured -2.8 dBTP in the MP4).
+# audio (v8, owner: "I can't hear myself, the music is too loud"): the voice is the master, normalised alone to
+# -16 LUFS; the score sits under it at -38 LUFS (22 LU down) and ducks about 6 dB more while he speaks; soft whoosh per
+# card entry. The full mix is normalised to -16 LUFS, TP -1.5 dBTP (YouTube level).
 whooshes = sorted({round(a, 3) for a, _ in CARDS} | {round(LIST_HEAD[0], 3), round(a0, 3), round(REVEAL, 3)})
 iWH = iHW + 1 + len(END_POPS)
-fc.append(f"{pa}asplit=2[vo][vsc]")
+fc.append(f"{pa}loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asplit=2[vo][vsc]")
 fc.append(f"[{iMUS}:a]atrim=0:{TOTAL},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,"
-          f"volume={MUSIC_GAIN},afade=t=in:st=0:d=0.3,afade=t=out:st={TOTAL - 1.6:.2f}:d=1.6[mu]")
-fc.append("[mu][vsc]sidechaincompress=threshold=0.05:ratio=3:attack=20:release=300:makeup=1[duck]")
+          f"loudnorm=I={MUSIC_LUFS}:TP=-9:LRA=11,aresample=48000,"
+          f"afade=t=in:st=0:d=0.3,afade=t=out:st={TOTAL - 1.6:.2f}:d=1.6[mu]")
+fc.append("[mu][vsc]sidechaincompress=threshold=0.04:ratio=3:attack=20:release=300:makeup=1[duck]")
 fc.append(f"[{iWH}:a]aresample=48000,aformat=channel_layouts=stereo,volume={WHOOSH_GAIN},asplit={len(whooshes)}"
           + "".join(f"[w{m}]" for m in range(len(whooshes))))
 for m, t0 in enumerate(whooshes):
     ms = int(round(max(0.0, t0 - 0.12) * 1000))  # the whoosh swells into the card's arrival
     fc.append(f"[w{m}]adelay={ms}|{ms}[wd{m}]")
 fc.append("".join(f"[wd{m}]" for m in range(len(whooshes))) + f"amix=inputs={len(whooshes)}:normalize=0:duration=longest[sfx]")
-fc.append("[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-23:TP=-4:LRA=11,aresample=48000[aout]")
+fc.append("[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[aout]")
 
 graph = ";\n".join(fc)
 open(os.path.join(HERE, "graph.txt"), "w").write(graph + "\n")
 ins = " \\\n  ".join(inputs + pop_inputs + ["-i sfx/whoosh.wav"])
 BUILD = f"""#!/usr/bin/env bash
-# Pill pitch cut v7-long: {NC} cuts + {END_DUR:.0f}-s end card = {TOTAL:.2f} s, 1080x1920 (source is portrait: 1024x576 with -90° rotation).
+# Pill pitch cut v8: {NC} cuts + {END_DUR:.0f}-s end card = {TOTAL:.2f} s, 1080x1920 (source is portrait: 1024x576 with -90° rotation).
 # Generated by make_edit.py (edit the cut list there, re-run it, never hand-edit the graph).
-#   bash pitch/video/edit/build.sh            full render  -> pitch/video/pill-pitch-v7-long.mp4
+#   bash pitch/video/edit/build.sh            full render  -> pitch/video/pill-pitch-v8.mp4
 #   bash pitch/video/edit/build.sh --preview  seconds 0-10 -> pitch/video/pill-pitch-preview10.mp4
 #   bash pitch/video/edit/build.sh --check    filtergraph dry run: 0.1 s to the null muxer, no encode
 set -euo pipefail
@@ -459,7 +498,7 @@ MODE=${{1:-full}}
 case "$MODE" in
   --preview) OUTARGS=(-t 10 -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -c:a aac -b:a 160k -movflags +faststart ../pill-pitch-preview10.mp4) ;;
   --check)   OUTARGS=(-t 0.1 -f null -) ;;
-  full)      OUTARGS=(-c:v libx264 -preset medium -crf 20 -profile:v high -pix_fmt yuv420p -r {FPS} -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../pill-pitch-v7-long.mp4) ;;
+  full)      OUTARGS=(-c:v libx264 -preset medium -crf 20 -profile:v high -pix_fmt yuv420p -r {FPS} -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../pill-pitch-v8.mp4) ;;
   *) echo "usage: build.sh [--preview|--check]"; exit 2 ;;
 esac
 "$FF" -hide_banner -y -nostdin \\

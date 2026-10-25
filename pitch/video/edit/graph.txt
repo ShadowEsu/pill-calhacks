@@ -59,9 +59,9 @@ color=c=black:s=1080x940:r=30:d=0.04,format=rgba,geq=r='0':g='0':b='0':a='185*po
 [17:v]format=rgba,crop=1270:194:0:0,scale=w='trunc(786*(1-0.45*exp(-t*8)*cos(t*22))/2)*2':h=-2:eval=frame:flags=bicubic,fade=t=in:st=0:d=0.10:alpha=1,fade=t=out:st=2.92:d=0.18:alpha=1,setpts=PTS-STARTPTS+141.529/TB[p1];
 [o0][p1]overlay=x='147+(786-overlay_w)/2':y='1240+(120-overlay_h)/2+40*exp(-(t-141.529)*10)*cos((t-141.529)*18)':eval=frame:enable='between(t,141.529,144.629)':eof_action=pass[o1];
 [o1]ass=captions.ass:fontsdir=fonts,format=yuv420p[vout];
-[y12]asplit=2[vo][vsc];
-[14:a]atrim=0:144.629,asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,volume=0.24,afade=t=in:st=0:d=0.3,afade=t=out:st=143.03:d=1.6[mu];
-[mu][vsc]sidechaincompress=threshold=0.05:ratio=3:attack=20:release=300:makeup=1[duck];
+[y12]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asplit=2[vo][vsc];
+[14:a]atrim=0:144.629,asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,loudnorm=I=-38:TP=-9:LRA=11,aresample=48000,afade=t=in:st=0:d=0.3,afade=t=out:st=143.03:d=1.6[mu];
+[mu][vsc]sidechaincompress=threshold=0.04:ratio=3:attack=20:release=300:makeup=1[duck];
 [18:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.12,asplit=14[w0][w1][w2][w3][w4][w5][w6][w7][w8][w9][w10][w11][w12][w13];
 [w0]adelay=8573|8573[wd0];
 [w1]adelay=33549|33549[wd1];
@@ -78,4 +78,4 @@ color=c=black:s=1080x940:r=30:d=0.04,format=rgba,geq=r='0':g='0':b='0':a='185*po
 [w12]adelay=128859|128859[wd12];
 [w13]adelay=132099|132099[wd13];
 [wd0][wd1][wd2][wd3][wd4][wd5][wd6][wd7][wd8][wd9][wd10][wd11][wd12][wd13]amix=inputs=14:normalize=0:duration=longest[sfx];
-[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-23:TP=-4:LRA=11,aresample=48000[aout]
+[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[aout]
