@@ -142,7 +142,7 @@ arduino-uno-q, arduino, c++, python, fastapi, sqlite, javascript, typescript, re
 - Website: https://pillmeifyoucan.health (alias: https://pill-site.vercel.app)
 - Clinic / personal app: https://app.pillmeifyoucan.health (alias: https://pill-app-delta.vercel.app)
 - Repo (station app in `pillgate/`, clinic app in `pill/web`, pay service in `pill/pay`): https://github.com/ShadowEsu/pill-calhacks `[FILL 1: make this repo public first; it is PRIVATE until you flip it. Not the old ShadowEsu/pill: that one stays private]`
-- Pitch video (1:27, portrait, Public, "Not made for kids", channel "Pill"; quieter re-export of Sun 07:30): https://www.youtube.com/watch?v=BZCJtnYEurU (YouTube files it as a Short because it is portrait and under 3 minutes)
+- Pitch video (2:25, portrait, Public, "Not made for kids", channel "Pill"; the full demo take with yellow captions, Sun 07:50): https://www.youtube.com/watch?v=yhxpyjmUJL0 (short 1:27 version, also public: https://www.youtube.com/watch?v=BZCJtnYEurU)
 - Animated explainer (2:38, Public, subtitles only, no narration; shows the first design with a quarter tablet): https://youtu.be/gdZAg-kwQG0
 - Clinic app walkthrough (62 s, Unlisted, no sound, early build): https://youtu.be/h8rAvjgKoxo
 - Figma deck: `[FILL 4: Figma link]`
