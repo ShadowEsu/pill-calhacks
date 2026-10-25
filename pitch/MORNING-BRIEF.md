@@ -3,8 +3,8 @@
 ## Live now (nothing to redo)
 - Website: https://pillmeifyoucan.health · App: https://app.pillmeifyoucan.health
 - Video on Devpost: your demo cut https://www.youtube.com/watch?v=yXEmc25dfMw (public); explainer https://youtu.be/gdZAg-kwQG0 as a link.
-- Code: https://github.com/ShadowEsu/pill-calhacks (public)
-- Devpost "Pill": SUBMITTED with story, 15 pictures, 13 prizes, deck PDF, links. Editable until 09:00.
+- Code: https://github.com/ShadowEsu/pill-calhacks (public) · Figma deck: https://www.figma.com/deck/xSmcPKdRTVgKI7XzGoqQ0R/pill-deck
+- Devpost "Pill": SUBMITTED with story, 15 pictures, 13 prizes, deck PDF, 8 links (incl. the Figma deck and the site's Coinbase section).
 
 ## Devpost by 08:30 (hard close 09:00)
 Paste by hand if the Grok "Devpost Hunter" bot has no window:
