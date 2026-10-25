@@ -62,8 +62,21 @@ class Device:
         time.sleep(2.0)
         ser.reset_input_buffer()
         self.mode = f"serial {port}"
-        while not self._stop:
-            yield ser.readline().decode(errors="ignore")
+        silent_since = time.time()
+        try:
+            while not self._stop:
+                raw = ser.readline()
+                if raw:
+                    silent_since = time.time()
+                elif time.time() - silent_since > 8:
+                    # the board stopped talking (reset, USB power save, a stuck bridge): reopen the port
+                    raise RuntimeError(f"no serial data for 8 s on {port}; reopening")
+                yield raw.decode(errors="ignore")
+        finally:
+            try:
+                ser.close()
+            except Exception:
+                pass
 
     def _replay_lines(self, path):
         self.mode = f"replay {os.path.basename(path)}"
